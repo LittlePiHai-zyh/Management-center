@@ -20,48 +20,89 @@
 7. 项目接口文档使用Kenife4j,浏览地址：http://localhost:9000/doc.html
 ## 项目结构
 ```java
-  src
-    ├─main
-    │  ├─java
-    │  │  └─com
-    │  │      └─zhangyh
-    │  │          └─management
-    │  │              ├─admin
-    │  │              │  ├─annotation 
-    │  │              │  ├─aspect
-    │  │              │  ├─config
-    │  │              │  ├─controller
-    │  │              │  ├─mapper
-    │  │              │  ├─model
-    │  │              │  │  ├─dto   //数据传入实体
-    │  │              │  │  ├─po  	//数据库对应实体
-    │  │              │  │  └─vo 	//返回前端实体
-    │  │              │  └─service
-    │  │              │      └─impl
-    │  │              └─common
-    │  │                  ├─config   //全局配置
-    │  │                  ├─constants
-    │  │                  ├─exception //异常及处理
-    │  │                  ├─http
-    │  │                  │  └─response //统一返回
-    │  │                  ├─listener //异步事件监听
-    │  │                  └─util
-    │  │                      └─sychronize //同步实体到数据库工具
+├─.idea                                     
+├─src
+│  ├─main
+│  │  ├─java
+│  │  │  └─com
+│  │  │      └─zhangyh
+│  │  │          └─management
+│  │  │              ├─admin
+│  │  │              │  ├─annotation //注解
+│  │  │              │  ├─aspect //aop
+│  │  │              │  ├─config //配置
+│  │  │              │  ├─controller
+│  │  │              │  ├─mapper
+│  │  │              │  ├─model
+│  │  │              │  │  ├─dto
+│  │  │              │  │  ├─po
+│  │  │              │  │  └─vo
+│  │  │              │  └─service
+│  │  │              │      └─impl
+│  │  │              └─common
+│  │  │                  ├─config
+│  │  │                  ├─constants
+│  │  │                  ├─exception
+│  │  │                  ├─http
+│  │  │                  │  └─response
+│  │  │                  ├─listener
+│  │  │                  └─util
+│  │  │                      └─table
+│  │  │                          └─sync //表结构同步
+│  │  │                              ├─annotation 
+│  │  │                              ├─core
+│  │  │                              ├─sql
+│  │  │                              │  ├─script
+│  │  │                              │  └─table
+│  │  │                              │      └─mysql
+│  │  │                              │          └─index
+│  │  │                              └─util
+│  │  └─resources
+│  │      ├─mapper
+│  │      ├─static
+│  │      └─templates
+│  └─test
+│      └─java
+│          └─com
+│              └─zhangyh
+│                  └─management
+└─target
+    ├─classes
+    │  ├─com
+    │  │  └─zhangyh
+    │  │      └─management
+    │  │          ├─admin
+    │  │          │  ├─annotation
+    │  │          │  ├─aspect
+    │  │          │  ├─config
+    │  │          │  ├─controller
+    │  │          │  ├─mapper
+    │  │          │  ├─model
+    │  │          │  │  ├─dto
+    │  │          │  │  ├─po
+    │  │          │  │  └─vo
+    │  │          │  └─service
+    │  │          │      └─impl
+    │  │          └─common
+    │  │              ├─config
+    │  │              ├─constants
+    │  │              ├─exception
+    │  │              ├─http
+    │  │              │  └─response
+    │  │              ├─listener
+    │  │              └─util
+    │  │                  └─table
+    │  │                      └─sync
     │  │                          ├─annotation
-    │  │                          ├─config
     │  │                          ├─core
-    │  │                          │  └─scanner
     │  │                          ├─sql
-    │  │                          │  └─type
-    │  │                          └─table
-    │  └─resources
-    │      ├─mapper
-    │      ├─static
-    │      └─templates
-    └─test
-        └─java
-            └─com
-                └─zhangyh
-                    └─management
+    │  │                          │  ├─script
+    │  │                          │  └─table
+    │  │                          │      └─mysql
+    │  │                          │          └─index
+    │  │                          └─util
+    │  └─mapper
+    └─generated-sources
+        └─annotations
 
 ```
