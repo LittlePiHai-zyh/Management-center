@@ -23,3 +23,13 @@ mybatis-plus:
 #  configuration:
 #    map-underscore-to-camel-case: false
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+#netty的配置信息(端口号,webSocket路径)
+webSocket:
+  netty:
+    port: 9999
+    path: /webSocket
+    readerIdleTime: 30 #读空闲超时时间设置(Netty心跳检测配置)
+    writerIdleTime: 30 #写空闲超时时间设置(Netty心跳检测配置)
+    allIdleTime: 30 #读写空闲超时时间设置(Netty心跳检测配置)

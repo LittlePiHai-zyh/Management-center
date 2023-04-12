@@ -1,5 +1,8 @@
 package com.zhangyh.management.common.util.table.sync.util;
 
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
 /**
  * @author zhangyh
  * @Date 2023/4/10 13:27
@@ -87,8 +90,9 @@ public class StringUtil {
         return sb.toString();
     }
 
-    public static void main(String[] args) {
-        System.out.println(toCapitalizeCamelCase("hello_world"));
+    public static void main(String[] args) throws IOException {
+        RandomAccessFile file = new RandomAccessFile("pub.key", "r");
+        System.out.println(file.length());
 
     }
 }
