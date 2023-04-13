@@ -155,24 +155,24 @@ public class SqlBuilder {
         Map<String, TableSchema.Field> modelField = modelTable.getFields().stream().collect(Collectors.toMap(TableSchema.Field::getName, e -> e));
         Map<String, TableSchema.Field> dbField = dbTableSchema.getFields().stream().collect(Collectors.toMap(TableSchema.Field::getName, e -> e));
         //删除多余的字段
-        AtomicInteger atomicInteger = new AtomicInteger();
-        dbField.forEach((fk, fv) -> {
-            TableSchema.Field field = modelField.get(fk);
-            if (field == null) {
-                atomicInteger.getAndIncrement();
-                String dropColum = MessageFormat.format(DROP_TEMPLATE, tableName, fk);
-                scriptBuilder.append(dropColum).append(";").append("\r\n");
+        if (modelTable.getDelOldField()) {
+            AtomicInteger atomicInteger = new AtomicInteger();
+            dbField.forEach((fk, fv) -> {
+                TableSchema.Field field = modelField.get(fk);
+                if (field == null) {
+                    atomicInteger.getAndIncrement();
+                    String dropColum = MessageFormat.format(DROP_TEMPLATE, tableName, fk);
+                    scriptBuilder.append(dropColum).append(";").append("\r\n");
+                }
+            });
+            //如果字段同时删除则留非主键到最后删
+            if (atomicInteger.get() == dbField.size()) {
+                allDrop = new StringBuilder(scriptBuilder);
+                scriptBuilder.setLength(0);
             }
-        });
-        //如果字段同时删除则留非主键到最后删
-        if (atomicInteger.get() == dbField.size()) {
-            allDrop = new StringBuilder(scriptBuilder);
-            scriptBuilder.setLength(0);
         }
         modelField.forEach((k, v) -> {
-
             TableSchema.Field field = dbField.get(k);
-
             if (field == null) {
                 //数据库中不存在字段则添加字段
                 String fieldSql = buildFieldSql(v);

@@ -32,6 +32,8 @@ public class TableSchema {
 
     private String dbName;
 
+    private Boolean delOldField;
+
     /**
      * 字段
      */

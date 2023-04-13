@@ -32,4 +32,10 @@ public @interface TableSync {
      * 表注释
      */
     String tableComment() default "";
+
+    /**
+     * 允许删除数据库中存在但是实体中不存在的字段
+     * @return
+     */
+    boolean delOldField() default false;
 }

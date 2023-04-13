@@ -208,6 +208,7 @@ public class TableSyncBeanPostProcessor implements BeanPostProcessor, Initializi
                         annotation.value())
                 .fields(new ArrayList<>())
                 .tableComment(annotation.tableComment())
+                .delOldField(annotation.delOldField())
                 .build();
         Field[] declaredFields = c.getClass().getDeclaredFields();
         for (Field declaredField : declaredFields) {
