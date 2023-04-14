@@ -74,6 +74,7 @@ public class TypeConvert {
         registry(DECIMAL.name(), BigDecimal.class);
 
         registry(BLOB.name(), Byte[].class);
+        registry(BLOB.name(), byte[].class);
         registry(TIMESTAMP.name(), LocalDateTime.class);
 
         registry("DATETIME", Date.class);
@@ -86,6 +87,6 @@ public class TypeConvert {
         IGNORE_LENGTH.add(TINYINT.name());
         IGNORE_LENGTH.add(SMALLINT.name());
         IGNORE_LENGTH.add(TIMESTAMP.name());
-        IGNORE_LENGTH.add("DATETIME");
+        IGNORE_LENGTH.add(BLOB.name());
     }
 }

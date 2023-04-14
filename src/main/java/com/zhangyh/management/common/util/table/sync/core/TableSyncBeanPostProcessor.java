@@ -188,7 +188,7 @@ public class TableSyncBeanPostProcessor implements BeanPostProcessor, Initializi
                 tableSchema.addFiled(field);
             }
             Statement conStatement = con.createStatement();
-            ResultSet res = conStatement.executeQuery("show table status from " + DB_NAME + " like '" + tableName + "'");
+            ResultSet res = conStatement.executeQuery("show table status from `" + DB_NAME + "` like '" + tableName + "'");
             if (res.next()) {
                 String comment = res.getString("Comment");
                 tableSchema.setTableComment(comment);
@@ -202,10 +202,14 @@ public class TableSyncBeanPostProcessor implements BeanPostProcessor, Initializi
      */
     private TableSchema buildTableSchema(Object c) {
         TableSync annotation = c.getClass().getAnnotation(TableSync.class);
+        String tableName=annotation.tableName();
+        if(StringUtils.isBlank(tableName)){
+            tableName=annotation.value();
+        }
         TableSchema table = TableSchema.builder()
-                .tableName(StringUtils.isBlank(annotation.value()) ?
+                .tableName(StringUtils.isBlank(tableName) ?
                         StringUtil.toUnderScoreCase(c.getClass().getName().substring(c.getClass().getName().lastIndexOf(".") + 1)) :
-                        annotation.value())
+                        tableName)
                 .fields(new ArrayList<>())
                 .tableComment(annotation.tableComment())
                 .delOldField(annotation.delOldField())

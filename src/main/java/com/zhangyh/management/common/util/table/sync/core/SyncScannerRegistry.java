@@ -5,11 +5,9 @@ import com.zhangyh.management.common.util.table.sync.annotation.TableSync;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.ClassUtils;
@@ -24,13 +22,12 @@ import java.util.List;
  * @Date 2023/4/10 9:31
  * @desc
  */
-public class SyncScannerRegistry implements ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware {
+public class SyncScannerRegistry implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(SyncScannerRegistry.class);
 
     private ResourceLoader resourceLoader;
 
-    private Environment environment;
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
@@ -45,7 +42,7 @@ public class SyncScannerRegistry implements ImportBeanDefinitionRegistrar, Resou
             classPathSyncScanner.setAnnotationClass(annotationClass);
         }
         // 扫描指定的类和包
-        List<String> basePackages = new ArrayList<String>();
+        List<String> basePackages = new ArrayList<>();
         for (String pkg : annoAttrs.getStringArray("value")) {
             if (StringUtils.hasText(pkg)) {
                 basePackages.add(pkg);
@@ -62,11 +59,6 @@ public class SyncScannerRegistry implements ImportBeanDefinitionRegistrar, Resou
         //添加过滤器
         classPathSyncScanner.registerFilters();
         classPathSyncScanner.doScan(StringUtils.toStringArray(basePackages));
-    }
-
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
     }
 
     @Override

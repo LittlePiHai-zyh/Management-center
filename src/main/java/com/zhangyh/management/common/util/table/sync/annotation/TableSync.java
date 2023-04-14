@@ -37,5 +37,5 @@ public @interface TableSync {
      * 允许删除数据库中存在但是实体中不存在的字段
      * @return
      */
-    boolean delOldField() default false;
+    boolean delOldField() default true;
 }

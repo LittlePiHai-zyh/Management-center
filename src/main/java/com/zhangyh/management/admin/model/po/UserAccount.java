@@ -37,7 +37,7 @@ public class UserAccount implements Serializable {
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    @Field(field = "id",comment = "主键",index = PRI.class,autoIncrement = true,allowNull = false)
+    @Field(field = "id",comment = "主键id",index = PRI.class,autoIncrement = true,allowNull = false)
     @TableId(type = IdType.AUTO)
     private Integer id;
 
