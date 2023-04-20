@@ -1,6 +1,7 @@
 package com.zhangyh.management.common.util.table.sync.sql.script;
 
 
+import com.alibaba.fastjson.JSON;
 import com.zhangyh.management.common.util.table.sync.sql.table.Index;
 import com.zhangyh.management.common.util.table.sync.sql.table.IndexHelper;
 import com.zhangyh.management.common.util.table.sync.sql.table.TableSchema;
@@ -193,6 +194,8 @@ public class SqlBuilder {
             if (v.equals(field)) {
                 return;
             }
+            System.out.println(JSON.toJSONString(v));
+            System.out.println(JSON.toJSONString(field));
             //直接修改字段
             String fieldSql = buildFieldSql(v);
             String modifyColumSql = MessageFormat.format(MODIFY_TEMPLATE, tableName, fieldSql);
@@ -212,12 +215,20 @@ public class SqlBuilder {
                 Index createIndex = (Index) IndexHelper.getIndex(v.getIndexType().getClass().getName().substring(v.getIndexType().getClass().getName().lastIndexOf(".") + 1));
                 String createScript = createIndex.alterScript(tableName, v.getName());
                 indexCreate.append(createScript).append(";").append("\r\n");
+                if(v.getAutoIncrement()&&!field.getAutoIncrement()&&v.getIndexType() instanceof PRI){
+                    String autoIncrement = MessageFormat.format(ALTER_AUTO_INCREMENT, tableName, buildFieldSql(field));
+                    scriptBuilder.append(autoIncrement).append(";").append("\r\n");
+                }
             }
             if (v.getIndexType() != null && field.getIndexType() == null) {
                 //实体存在索引数据库不存在索引
                 Index index = (Index) IndexHelper.getIndex(v.getIndexType().getClass().getName().substring(v.getIndexType().getClass().getName().lastIndexOf(".") + 1));
                 String createScript = index.alterScript(tableName, v.getName());
                 indexCreate.append(createScript).append(";").append("\r\n");
+                if(v.getAutoIncrement()&&!field.getAutoIncrement()&&v.getIndexType() instanceof PRI){
+                    String autoIncrement = MessageFormat.format(ALTER_AUTO_INCREMENT, tableName, buildFieldSql(field));
+                    scriptBuilder.append(autoIncrement).append(";").append("\r\n");
+                }
             }
         });
 

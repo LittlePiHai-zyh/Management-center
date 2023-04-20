@@ -86,6 +86,7 @@ public class TypeConvert {
         IGNORE_LENGTH.add("INT");
         IGNORE_LENGTH.add(TINYINT.name());
         IGNORE_LENGTH.add(SMALLINT.name());
+        IGNORE_LENGTH.add("DATETIME");
         IGNORE_LENGTH.add(TIMESTAMP.name());
         IGNORE_LENGTH.add(BLOB.name());
     }

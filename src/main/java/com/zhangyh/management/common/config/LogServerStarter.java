@@ -1,6 +1,5 @@
 package com.zhangyh.management.common.config;
 
-import com.zhangyh.management.admin.server.NettyServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -18,7 +17,7 @@ public class LogServerStarter implements ApplicationListener<ContextRefreshedEve
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
        log.info("正在启动Netty日志服务-------->>>>>>>>");
-        NettyServer nettyServer = new NettyServer();
-        nettyServer.startServer();
+//        NettyServer nettyServer = new NettyServer();
+//        nettyServer.startServer();
     }
 }

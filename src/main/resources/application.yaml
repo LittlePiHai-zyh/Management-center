@@ -13,6 +13,9 @@ spring:
       matching-strategy: ANT_PATH_MATCHER
   session:
     timeout: "P30D" #30天
+  messages: #国际化配置
+    encoding: UTF-8
+    basename: i18n/message
 
 mybatis-plus:
   global-config:

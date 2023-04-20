@@ -1,6 +1,5 @@
 package com.zhangyh.management.admin.service.impl;
 
-import cn.hutool.core.codec.Base64;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -17,16 +16,14 @@ import com.zhangyh.management.admin.service.UserAccountService;
 import com.zhangyh.management.common.constants.ErrorCode;
 import com.zhangyh.management.common.constants.GlobalConstants;
 import com.zhangyh.management.common.exception.BusinessException;
-import com.zhangyh.management.common.util.EncryptUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.util.Date;
 import java.util.List;
 
@@ -40,11 +37,10 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
 
     private final Logger log= LoggerFactory.getLogger(UserAccountServiceImpl.class);
 
-    public static final String privateKeyHeader="PRIVATE KEY";
-    public static final String publicKeyHeader="PUBLIC KEY";
-    public static final String privateKeyFile="server.key";
-    public static final String publicKeyFIle="pub.key";
-    public static final String algorithm="RSA";
+    /**
+     * 盐值，混淆密码
+     */
+    private static final String SALT = "zhangyh";
 
     @Resource
     UserAccountMapper userAccountMapper;
@@ -70,27 +66,15 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
     @Override
     public UserAccountVo baseLogin(UserLoginDto user,HttpServletRequest request) {
         String password = user.getPassword();
-        if(user.getUsername().length()<5){
-            throw new BusinessException(ErrorCode.INVALID_PARAMS,"账号长度必须大于5位");
-        }
-        if(password.length()<6){
-            throw new BusinessException(ErrorCode.INVALID_PARAMS,"密码长度必须长于6位");
-        }
         QueryWrapper<UserAccount> userAccountQueryWrapper = new QueryWrapper<>();
         userAccountQueryWrapper.eq(UserAccount.USERNAME,user.getUsername());
         UserAccount userAccount = userAccountMapper.selectOne(userAccountQueryWrapper);
         if(userAccount==null){
             throw new BusinessException(ErrorCode.NOT_EXIST_USER);
         }
-        String decodePassword=null;
-        try {
-            PrivateKey privateKey = (PrivateKey) EncryptUtils.get(privateKeyFile, algorithm, true,privateKeyHeader);
-            decodePassword = EncryptUtils.decryptByPrivateKey(Base64.encode(privateKey.getEncoded()), userAccount.getPassword());
-        } catch (Exception e) {
-            log.info("----解密失败----");
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
-        }
-        if(!decodePassword.equals(password)){
+        // 2. 加密
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes());
+        if(!encryptPassword.equals(userAccount.getPassword())){
             throw new BusinessException(ErrorCode.PASSWORD_ERROR);
         }
         UserAccountVo userAccountVo = new UserAccountVo(userAccount);
@@ -114,15 +98,9 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
         UserAccount uAccount = new UserAccount();
         uAccount.setCreateTime(new Date());
         uAccount.setUsername(userAccount);
-        String encPassword=null;
-        try {
-            PublicKey publicKey = (PublicKey) EncryptUtils.get(publicKeyFIle, algorithm, false,publicKeyHeader);
-            encPassword = EncryptUtils.encryptByPublicKey(Base64.encode(publicKey.getEncoded()), registryDto.getPassword());
-        } catch (Exception e) {
-            log.info("----加密失败----");
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
-        }
-        uAccount.setPassword(encPassword);
+        // 2. 加密
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + registryDto.getPassword()).getBytes());
+        uAccount.setPassword(encryptPassword);
         userAccountMapper.insert(uAccount);
         //组装用户信息
         UserInfo userInfo = new UserInfo();

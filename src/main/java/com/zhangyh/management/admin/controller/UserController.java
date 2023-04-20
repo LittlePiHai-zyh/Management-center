@@ -21,6 +21,7 @@ import com.zhangyh.management.common.constants.ErrorCode;
 import com.zhangyh.management.common.exception.BusinessException;
 import com.zhangyh.management.common.http.response.ApiResponse;
 import com.zhangyh.management.common.http.response.ResponseHelper;
+import com.zhangyh.management.common.util.I18nUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -51,6 +52,12 @@ public class UserController {
 
     @Resource
     ImgVerifyCodeServiceImpl imgVerifyCodeService;
+
+
+    @RequestMapping("/hello")
+    public String hello(){
+        return I18nUtils.getMessage("password");
+    }
 
     @Log
     @ApiOperation(value = "用户信息分页查询",httpMethod = "POST")

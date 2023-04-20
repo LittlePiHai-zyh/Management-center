@@ -18,10 +18,10 @@ public enum ErrorCode {
     NO_AUTH_ERROR(4008,"无权限" ),
     PASSWORD_ERROR(4009,"密码错误" ),
     ACCOUNT_DUPLICATE(4010,"账号重复" ),
-
+    NO_LOCALE_RESOLVER_FOUND(4011,"不存在Local" ),
     //5000为系统异常
     SYSTEM_ERROR(5000, "系统内部异常"),
-    OPERATION_ERROR(5001, "操作失败");
+    OPERATION_ERROR(5001, "操作失败"), ;
 
     private final String message;
 

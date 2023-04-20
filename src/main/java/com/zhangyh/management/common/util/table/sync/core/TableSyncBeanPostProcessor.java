@@ -108,6 +108,7 @@ public class TableSyncBeanPostProcessor implements BeanPostProcessor, Initializi
         if(StringUtils.isNotBlank(alterTableSql)){
             LOGGER.info("execute sql :\r\n{}", alterTableSql);
         }
+        System.out.println(alterTableSql);
         jdbcTemplate.execute((ConnectionCallback<? extends Object>) con -> {
             Statement statement = con.createStatement();
             try {
@@ -217,6 +218,7 @@ public class TableSyncBeanPostProcessor implements BeanPostProcessor, Initializi
         Field[] declaredFields = c.getClass().getDeclaredFields();
         for (Field declaredField : declaredFields) {
             IgnoreField ignoreField = declaredField.getAnnotation(IgnoreField.class);
+            //静态与忽略字段注解则无需构建
             if (ignoreField != null|| ModifierUtil.hasModifier(declaredField, ModifierUtil.ModifierType.STATIC)) {
                 continue;
             }

@@ -20,6 +20,8 @@ public class PushMsgController {
     @Resource
     PushMsgService pushMsgService;
 
+
+
     @GetMapping("/one")
     public void pushMsgToOne(String userId, String msg) {
         pushMsgService.pushMsgToOne(userId,msg);
