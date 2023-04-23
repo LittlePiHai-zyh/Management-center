@@ -79,17 +79,19 @@ public class AuthCheckAspect {
             return true;
         }
         UserAccount currentUser = userService.getCurrentUser(request);
-        String userPermissions = currentUser.getPermissions();
+        if(currentUser.getId()==null){
+            throw new BusinessException(ErrorCode.UNLOGIN,"无权限");
+        }
+        String userPermissions = currentUser.getRoles();
         String[] permission = userPermissions.split(",");
 
         for (PermissionEnum allowedPermission : allowedPermissions) {
             //通过code校验
-            long count = Arrays.stream(permission).filter(p -> p.contains(String.valueOf(allowedPermission.getCode()))).count();
-            if(count<=0){
-                return false;
+            if(Arrays.asList(permission).contains(allowedPermission.getCode()+"")){
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     @AfterThrowing(pointcut = "point()", throwing = "e")

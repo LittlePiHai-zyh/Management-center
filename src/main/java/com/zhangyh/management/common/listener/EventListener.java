@@ -26,7 +26,7 @@ public class EventListener {
     @org.springframework.context.event.EventListener(SysLog.class)
     public void saveSysLog(SysLog event) {
         log.info("=====即将异步保存到数据库======");
-        logService.save(event);
+//        logService.save(event);
     }
 
 }

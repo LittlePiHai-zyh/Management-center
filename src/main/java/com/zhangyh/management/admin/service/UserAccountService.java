@@ -1,23 +1,21 @@
 package com.zhangyh.management.admin.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhangyh.management.admin.model.dto.UserLoginDto;
 import com.zhangyh.management.admin.model.dto.UserQueryDto;
 import com.zhangyh.management.admin.model.dto.UserRegistryDto;
 import com.zhangyh.management.admin.model.po.UserAccount;
+import com.zhangyh.management.admin.model.vo.PageInfoVo;
 import com.zhangyh.management.admin.model.vo.UserAccountVo;
 import com.zhangyh.management.admin.model.vo.UserVo;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @author zhangyh
  * @Date 2023/4/6 15:25
  * @desc
  */
-public interface UserAccountService  extends IService<UserAccount> {
+public interface UserAccountService {
 
    /**
     * 获取登录的用户
@@ -40,6 +38,14 @@ public interface UserAccountService  extends IService<UserAccount> {
     */
    void userRegister(UserRegistryDto registryDto);
 
+   /**
+    * 分页查询
+    * @param queryDto
+    * @return
+    */
+   PageInfoVo<UserVo> selectInfoPageList(UserQueryDto queryDto);
 
-   List<UserVo> selectUserVoPage(Page<UserVo> page, UserQueryDto queryDto);
+   Integer removeById(String  ids);
+
+   UserVo getById(Integer id);
 }

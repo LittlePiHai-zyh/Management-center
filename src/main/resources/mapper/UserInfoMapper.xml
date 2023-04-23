@@ -5,20 +5,35 @@
 <mapper namespace="com.zhangyh.management.admin.mapper.UserInfoMapper">
 
     <resultMap id="BaseResultMap" type="com.zhangyh.management.admin.model.po.UserInfo">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="accountId" column="account_id" jdbcType="VARCHAR"/>
-            <result property="deleted" column="deleted" jdbcType="INTEGER"/>
-            <result property="gender" column="gender" jdbcType="INTEGER"/>
-            <result property="birthday" column="birthday" jdbcType="TIMESTAMP"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="accountId" column="account_id" jdbcType="VARCHAR"/>
+        <result property="deleted" column="deleted" jdbcType="INTEGER"/>
+        <result property="gender" column="gender" jdbcType="INTEGER"/>
+        <result property="birthday" column="birthday" jdbcType="TIMESTAMP"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="mobile" column="mobile" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,`name`,account_id,
+        id
+        ,`name`,account_id,
         deleted,`gender`,birthday,
         create_time,update_time,mobile
     </sql>
+    <select id="selectUserInfo" resultType="com.zhangyh.management.admin.model.vo.UserVo">
+        SELECT a.id,
+               a.username,
+               u.name,
+               a.roles,
+               a.state,
+               u.gender,
+               u.birthday,
+               u.mobile,
+               u.email
+        FROM user_account a
+                 LEFT JOIN user_info u ON a.id = u.account_id
+        WHERE a.id=#{id}
+    </select>
 </mapper>

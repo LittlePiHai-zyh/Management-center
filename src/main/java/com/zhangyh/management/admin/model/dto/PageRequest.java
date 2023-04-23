@@ -13,12 +13,12 @@ public class PageRequest {
     /**
      * 当前页号
      */
-    private final Long current = 1L;
+    private final Integer page = 1;
 
     /**
      * 页面大小
      */
-    private final Long pageSize = 10L;
+    private final Integer limit = 10;
 
     /**
      * 排序字段

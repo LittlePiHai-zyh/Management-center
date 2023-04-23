@@ -1,8 +1,5 @@
 package com.zhangyh.management.admin.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zhangyh.management.admin.mapper.UserInfoMapper;
-import com.zhangyh.management.admin.model.po.UserInfo;
 import com.zhangyh.management.admin.service.UserInfoService;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +9,5 @@ import org.springframework.stereotype.Service;
  * @desc
  */
 @Service
-public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> implements UserInfoService {
+public class UserInfoServiceImpl  implements UserInfoService {
 }

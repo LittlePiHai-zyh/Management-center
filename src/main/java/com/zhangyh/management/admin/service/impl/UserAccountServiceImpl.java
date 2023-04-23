@@ -1,8 +1,7 @@
 package com.zhangyh.management.admin.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.zhangyh.management.admin.mapper.UserAccountMapper;
 import com.zhangyh.management.admin.mapper.UserInfoMapper;
 import com.zhangyh.management.admin.model.dto.UserLoginDto;
@@ -10,6 +9,7 @@ import com.zhangyh.management.admin.model.dto.UserQueryDto;
 import com.zhangyh.management.admin.model.dto.UserRegistryDto;
 import com.zhangyh.management.admin.model.po.UserAccount;
 import com.zhangyh.management.admin.model.po.UserInfo;
+import com.zhangyh.management.admin.model.vo.PageInfoVo;
 import com.zhangyh.management.admin.model.vo.UserAccountVo;
 import com.zhangyh.management.admin.model.vo.UserVo;
 import com.zhangyh.management.admin.service.UserAccountService;
@@ -19,13 +19,16 @@ import com.zhangyh.management.common.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author zhangyh
@@ -33,7 +36,7 @@ import java.util.List;
  * @desc
  */
 @Service
-public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserAccount> implements UserAccountService {
+public class UserAccountServiceImpl implements UserAccountService {
 
     private final Logger log= LoggerFactory.getLogger(UserAccountServiceImpl.class);
 
@@ -51,14 +54,17 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
     @Override
     public UserAccount getCurrentUser(HttpServletRequest request) {
         UserAccountVo user = (UserAccountVo)request.getSession().getAttribute(GlobalConstants.SESSION_KEY);
-        if(user==null||user.getId()==null){
-            throw new BusinessException(ErrorCode.UNLOGIN);
-        }
-        QueryWrapper<UserAccount> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(UserAccount.ID,user.getId());
-        UserAccount userAccount = userAccountMapper.selectOne(queryWrapper);
-        if(userAccount==null){
-            throw new BusinessException(ErrorCode.NOT_EXIST_USER);
+        UserAccount userAccount;
+        if(user==null){
+            userAccount=new UserAccount();
+            userAccount.setUsername("anonymous");
+        }else{
+            Example example = new Example(UserAccount.class);
+            example.createCriteria().andEqualTo(UserAccount.ID,user.getId());
+            userAccount = userAccountMapper.selectOneByExample(example);
+            if(userAccount==null){
+                throw new BusinessException(ErrorCode.NOT_EXIST_USER);
+            }
         }
         return userAccount;
     }
@@ -66,9 +72,10 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
     @Override
     public UserAccountVo baseLogin(UserLoginDto user,HttpServletRequest request) {
         String password = user.getPassword();
-        QueryWrapper<UserAccount> userAccountQueryWrapper = new QueryWrapper<>();
-        userAccountQueryWrapper.eq(UserAccount.USERNAME,user.getUsername());
-        UserAccount userAccount = userAccountMapper.selectOne(userAccountQueryWrapper);
+        Example example = new Example(UserAccount.class);
+        example.createCriteria()
+                        .andEqualTo(UserAccount.USERNAME,user.getUsername());
+        UserAccount userAccount = userAccountMapper.selectOneByExample(example);
         if(userAccount==null){
             throw new BusinessException(ErrorCode.NOT_EXIST_USER);
         }
@@ -89,9 +96,10 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
             throw new BusinessException(ErrorCode.INVALID_PARAMS,"两次密码一样");
         }
         String userAccount = registryDto.getUsername();
-        QueryWrapper<UserAccount> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(UserAccount.USERNAME,userAccount);
-        if(userAccountMapper.selectCount(queryWrapper)>0){
+        Example example = new Example(UserAccount.class);
+        example.createCriteria()
+                .andEqualTo(UserAccount.USERNAME,userAccount);
+        if(userAccountMapper.selectCountByExample(example)>0){
             throw new BusinessException(ErrorCode.ACCOUNT_DUPLICATE);
         }
         //组装账号信息
@@ -106,39 +114,55 @@ public class UserAccountServiceImpl extends ServiceImpl<UserAccountMapper, UserA
         UserInfo userInfo = new UserInfo();
         userInfo.setAccountId(uAccount.getId());
         userInfo.setCreateTime(new Date());
-        if(registryDto.getBirthday()!=null){
-            userInfo.setBirthday(registryDto.getBirthday());
-        }
-        if(registryDto.getGender()!=null){
-            userInfo.setGender(registryDto.getGender());
-        }
-        if(registryDto.getMobile()!=null){
-            userInfo.setMobile(registryDto.getMobile());
-        }
-        if(registryDto.getName()!=null){
-            userInfo.setName(registryDto.getName());
-        }
-        if(registryDto.getEmail()!=null){
-            userInfo.setEmail(registryDto.getEmail());
-        }
+        BeanUtils.copyProperties(registryDto,userInfo);
         userInfoMapper.insert(userInfo);
     }
 
     @Override
-    public List<UserVo> selectUserVoPage(Page<UserVo> page, UserQueryDto queryDto) {
-        QueryWrapper<UserAccount> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("user_account.id,user_account.username,user_account.permissions,user_account.state" ,
-                        " user_info.name, user_info.gender, user_info.mobile,user_info.email, user_info.birthday")
-                .eq("user_account.deleted", 0)
-                .eq(StringUtils.isNotBlank(queryDto.getUsername()), "user_account.username", queryDto.getUsername())
-                .like(StringUtils.isNotBlank(queryDto.getName()),"user_info.name",queryDto.getName())
-                .like(StringUtils.isNotBlank(queryDto.getPermissions()),"user_account.permissions",queryDto.getPermissions())
-                .eq(queryDto.getState()!=null,"user_account.state",queryDto.getState())
-                .eq(queryDto.getGender()!=null,"user_info.gender",queryDto.getGender())
-                .eq(StringUtils.isNotBlank(queryDto.getMobile()),"user_info.mobile",queryDto.getMobile())
-                .eq(StringUtils.isNotBlank(queryDto.getEmail()),"user_info.email",queryDto.getEmail())
-                .orderByDesc("user_account.create_time");
-        return userAccountMapper.selectUserVoPage(page, queryWrapper);
+    public PageInfoVo<UserVo> selectInfoPageList(UserQueryDto queryDto) {
+        int page = 1;
+        int limit = 10;
+        if(queryDto.getPage()!=null){
+            page=queryDto.getPage();
+        }
+        if(queryDto.getPage()!=null){
+            limit=queryDto.getPage();
+        }
+        PageHelper.startPage(page, limit, "create_time desc");
+        Page<UserVo> pageList =   (Page<UserVo>) userAccountMapper.selectInfoPageList(queryDto);
+        PageInfoVo<UserVo> pageInfoVo = new PageInfoVo<>();
+        pageInfoVo.setPages(pageList.getPages());
+        pageInfoVo.setTotal(pageList.getTotal());
+        pageInfoVo.setData(pageList.getResult());
+        return pageInfoVo;
+    }
+
+    @Override
+    public Integer removeById(String ids) {
+        if(StringUtils.isBlank(ids)){
+            throw new BusinessException(ErrorCode.INVALID_PARAMS);
+        }
+        String[] id = ids.split(",");
+        AtomicInteger atomicInteger = new AtomicInteger();
+        Arrays.stream(id).forEach(account->{
+            UserAccount userAccount = new UserAccount();
+            userAccount.setId(Integer.parseInt(account));
+            userAccount.setDeleted((byte)0);
+            userAccountMapper.updateByPrimaryKeySelective(userAccount);
+            Example example = new Example(UserInfo.class);
+            example.createCriteria().andEqualTo(UserInfo.ACCOUNT_ID,account);
+            UserInfo userInfo = new UserInfo();
+            userInfo.setDeleted((byte)0);
+            userInfoMapper.updateByExampleSelective(userInfo,example);
+            atomicInteger.getAndIncrement();
+        });
+        return atomicInteger.get();
+    }
+
+    @Override
+    public UserVo getById(Integer id) {
+      UserVo userVo=  userInfoMapper.selectUserInfo(id);
+        return userVo;
     }
 
 

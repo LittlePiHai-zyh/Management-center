@@ -13,19 +13,27 @@
             <result property="expiredTime" column="expired_time" jdbcType="TIMESTAMP"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
-            <result property="permissions" column="permissions" jdbcType="VARCHAR"/>
+            <result property="roles" column="roles" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,username,password,
         deleted,`state`,expired_time,
-        create_time,update_time,permissions
+        create_time,update_time,roles
     </sql>
 
-    <select id="selectUserVoPage" resultType="com.zhangyh.management.admin.model.vo.UserVo">
-        SELECT ${ew.sqlSelect} FROM user_account
-                                        INNER JOIN user_info  ON user_account.id=user_info.account_id
-            ${ew.customSqlSegment}
+    <select id="selectInfoPageList" resultType="com.zhangyh.management.admin.model.vo.UserVo">
+        SELECT a.id,
+               a.username,
+               u.NAME,
+               a.roles,
+               a.state,
+               u.gender,
+               u.birthday,
+               u.mobile,
+               u.email
+        FROM user_account a
+                 LEFT JOIN user_info u ON a.id = u.account_id
     </select>
 
 </mapper>

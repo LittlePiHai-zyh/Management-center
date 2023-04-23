@@ -1,8 +1,5 @@
 package com.zhangyh.management.admin.service.impl;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zhangyh.management.admin.mapper.LogMapper;
-import com.zhangyh.management.admin.model.po.SysLog;
 import com.zhangyh.management.admin.service.LogService;
 import org.springframework.stereotype.Service;
 
@@ -12,5 +9,5 @@ import org.springframework.stereotype.Service;
  * @desc
  */
 @Service
-public class LogServiceImpl extends ServiceImpl<LogMapper, SysLog> implements LogService {
+public class LogServiceImpl implements LogService {
 }

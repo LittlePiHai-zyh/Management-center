@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.zhangyh.management.admin.model.po.SysLog">
             <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="level" column="level" jdbcType="VARCHAR"/>
             <result property="businessType" column="business_type" jdbcType="VARCHAR"/>
             <result property="requestMethod" column="request_method" jdbcType="VARCHAR"/>
             <result property="operIp" column="oper_ip" jdbcType="VARCHAR"/>
@@ -19,7 +19,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,title,business_type,
+        id,`level`,business_type,
         deleted,`request_method`,oper_ip,
         create_time,update_time,oper_name,oper_time,oper_url
     </sql>

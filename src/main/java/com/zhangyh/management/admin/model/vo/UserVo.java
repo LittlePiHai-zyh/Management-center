@@ -18,7 +18,7 @@ public class UserVo {
 
     private String name;
 
-    private String permissions;
+    private String roles;
 
     private Integer state;
 
