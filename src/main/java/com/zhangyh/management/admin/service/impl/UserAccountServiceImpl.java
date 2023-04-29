@@ -106,6 +106,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         UserAccount uAccount = new UserAccount();
         uAccount.setCreateTime(new Date());
         uAccount.setUsername(userAccount);
+        uAccount.setRoles("1");
         // 2. 加密
         String encryptPassword = DigestUtils.md5DigestAsHex((SALT + registryDto.getPassword()).getBytes());
         uAccount.setPassword(encryptPassword);
@@ -128,7 +129,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         if(queryDto.getPage()!=null){
             limit=queryDto.getPage();
         }
-        PageHelper.startPage(page, limit, "create_time desc");
+        PageHelper.startPage(page, limit, "a.create_time desc");
         Page<UserVo> pageList =   (Page<UserVo>) userAccountMapper.selectInfoPageList(queryDto);
         PageInfoVo<UserVo> pageInfoVo = new PageInfoVo<>();
         pageInfoVo.setPages(pageList.getPages());
@@ -161,8 +162,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public UserVo getById(Integer id) {
-      UserVo userVo=  userInfoMapper.selectUserInfo(id);
-        return userVo;
+        return userInfoMapper.selectUserInfo(id);
     }
 
 

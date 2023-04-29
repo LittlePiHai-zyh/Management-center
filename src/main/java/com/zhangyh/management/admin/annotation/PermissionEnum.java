@@ -9,8 +9,8 @@ import lombok.Getter;
  */
 @Getter
 public enum PermissionEnum {
-    USER(0,"用户权限"),
-    ADMIN(1,"管理员权限")
+    USER(1,"用户权限"),
+    ADMIN(2,"管理员权限")
     ;
 
     PermissionEnum( Integer code,String name) {

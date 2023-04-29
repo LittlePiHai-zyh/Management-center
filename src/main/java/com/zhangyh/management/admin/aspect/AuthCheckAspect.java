@@ -83,11 +83,13 @@ public class AuthCheckAspect {
             throw new BusinessException(ErrorCode.UNLOGIN,"无权限");
         }
         String userPermissions = currentUser.getRoles();
+        if(null==userPermissions){
+            return false;
+        }
         String[] permission = userPermissions.split(",");
-
         for (PermissionEnum allowedPermission : allowedPermissions) {
             //通过code校验
-            if(Arrays.asList(permission).contains(allowedPermission.getCode()+"")){
+            if(Arrays.asList(permission).contains(String.valueOf(allowedPermission.getCode()))){
                 return true;
             }
         }
