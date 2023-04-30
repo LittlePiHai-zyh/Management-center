@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lsw.management.admin.mapper.DesignProjectAuditFlowMapper">
+
+    <resultMap id="BaseResultMap" type="com.lsw.management.admin.model.po.designProjectAuditFlow.DesignProjectAuditFlow">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="departmentAuditResult" column="department_audit_result" jdbcType="TINYINT"/>
+            <result property="departmentAuditUserId" column="department_audit_user_id" jdbcType="INTEGER"/>
+            <result property="schoolAuditUserId" column="school_audit_user_id" jdbcType="INTEGER"/>
+            <result property="schoolAuditTime" column="school_audit_time" jdbcType="TIMESTAMP"/>
+            <result property="schoolAuditResult" column="school_audit_result" jdbcType="TINYINT"/>
+            <result property="state" column="state" jdbcType="INTEGER"/>
+            <result property="departmentAuditTime" column="department_audit_time" jdbcType="TIMESTAMP"/>
+            <result property="topicId" column="topic_id" jdbcType="INTEGER"/>
+            <result property="departmentAuditOpinion" column="department_audit_opinion" jdbcType="VARCHAR"/>
+            <result property="schoolAuditUserOpinion" column="school_audit_user_opinion" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,department_audit_result,department_audit_user_id,
+        school_audit_user_id,school_audit_time,school_audit_result,
+        state,department_audit_time,topic_id,
+        department_audit_opinion,school_audit_user_opinion
+    </sql>
+</mapper>

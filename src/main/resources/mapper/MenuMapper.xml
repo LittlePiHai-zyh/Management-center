@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lsw.management.admin.mapper.MenuMapper">
+
+    <resultMap id="BaseResultMap" type="com.lsw.management.admin.model.po.menu.Menu">
+            <id property="menuId" column="menu_id" jdbcType="INTEGER"/>
+            <result property="pid" column="pid" jdbcType="INTEGER"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="icon" column="icon" jdbcType="VARCHAR"/>
+            <result property="iconColor" column="icon_color" jdbcType="VARCHAR"/>
+            <result property="path" column="path" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="hidden" column="hidden" jdbcType="TINYINT"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deleted" column="deleted" jdbcType="TINYINT"/>
+            <result property="permissions" column="permissions" jdbcType="VARCHAR"/>
+            <result property="component" column="component" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        menu_id,pid,title,
+        icon,icon_color,`path`,
+        `name`,hidden,
+    permissions,component
+    </sql>
+    <select id="pageList" resultMap="menuVo">
+        SELECT
+            <include refid="Base_Column_List"/>
+            FROM menu
+        <where>
+                menu.deleted=0
+                <if test="queryDto.name != null and queryDto.name != ''">
+                    AND menu.name LIKE concat('%',#{queryDto.name}, '%')
+                </if>
+                <if test="queryDto.pid != null and queryDto.pid != ''">
+                    AND menu.pid = #{queryDto.pid}
+                </if>
+                <if test="queryDto.hidden != null and queryDto.hidden != ''">
+                    AND menu.hidden = #{queryDto.hidden}
+                </if>
+                <if test="queryDto.title != null and queryDto.title != ''">
+                    AND menu.title LIKE concat('%',#{queryDto.title}, '%')
+                </if>
+        </where>
+    </select>
+
+    <resultMap id="menuVo" type="com.lsw.management.admin.model.vo.menu.MenuVo">
+        <id property="menuId" column="menu_id" jdbcType="INTEGER"/>
+        <result property="pid" column="pid" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="iconColor" column="icon_color" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="hidden" column="hidden" jdbcType="TINYINT"/>
+        <result property="permissions" column="permissions" jdbcType="VARCHAR"/>
+        <result property="component" column="component" jdbcType="VARCHAR"/>
+    </resultMap>
+</mapper>

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangyh.management.admin.mapper.UserAccountMapper">
+<mapper namespace="com.lsw.management.admin.mapper.UserAccountMapper">
 
-    <resultMap id="BaseResultMap" type="com.zhangyh.management.admin.model.po.UserAccount">
+    <resultMap id="BaseResultMap" type="com.lsw.management.admin.model.po.user.UserAccount">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="password" column="password" jdbcType="VARCHAR"/>
@@ -22,7 +22,7 @@
         create_time,update_time,roles
     </sql>
 
-    <select id="selectInfoPageList" resultType="com.zhangyh.management.admin.model.vo.UserVo">
+    <select id="selectInfoPageList" resultType="com.lsw.management.admin.model.vo.user.UserVo">
         SELECT a.id,
                a.username,
                u.NAME,

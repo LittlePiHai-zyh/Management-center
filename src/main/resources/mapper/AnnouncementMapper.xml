@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lsw.management.admin.mapper.AnnouncementMapper">
+
+    <resultMap id="BaseResultMap" type="com.lsw.management.admin.model.po.announcement.Announcement">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="accountId" column="account_id" jdbcType="INTEGER"/>
+            <result property="deleted" column="deleted" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,content,
+        is_top,account_id,deleted,
+        create_time,update_time
+    </sql>
+
+    <sql id="pageList_Column">
+        announcement.id,announcement.title,announcement.content,
+        announcement.account_id,
+        announcement.create_time,u.username
+    </sql>
+
+    <select id="pageList" resultMap="announcementVo_Column">
+        SELECT
+            <include refid="pageList_Column"/>
+            FROM announcement LEFT JOIN user_account u ON u.id=announcement.account_id
+        <where>
+            announcement.deleted=0
+                <if test="queryDto.title != null and queryDto.title != ''">
+                    AND announcement.title LIKE concat('%',#{queryDto.title}, '%')
+                </if>
+                <if test="queryDto.content != null and queryDto.content != ''">
+                    AND announcement.content LIKE concat('%',#{queryDto.content}, '%')
+                </if>
+        </where>
+    </select>
+
+    <resultMap id="announcementVo_Column" type="com.lsw.management.admin.model.vo.announcement.AnnouncementVo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+</mapper>

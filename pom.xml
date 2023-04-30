@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.zhangyh</groupId>
-    <artifactId>Management-center</artifactId>
+    <artifactId>GDM-center</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Management-center</name>
-    <description>Management-center</description>
+    <name>GDM-center</name>
+    <description>毕业设计管理中心</description>
     <properties>
         <java.version>1.8</java.version>
         <hutool.version>5.4.3</hutool.version>
@@ -36,12 +36,6 @@
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
             <version>3.0.3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.91.Final</version>
         </dependency>
 
         <dependency>

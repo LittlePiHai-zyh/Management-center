@@ -19,6 +19,7 @@ spring:
     encoding: UTF-8
     basename: i18n/message
 
+
 mybatis:
   mapper-locations: classpath*:mapper/*.xml
   configuration:

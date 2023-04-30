@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zhangyh.management.admin.mapper.LogMapper">
+<mapper namespace="com.lsw.management.admin.mapper.LogMapper">
 
-    <resultMap id="BaseResultMap" type="com.zhangyh.management.admin.model.po.SysLog">
+    <resultMap id="BaseResultMap" type="com.lsw.management.admin.model.po.log.SysLog">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="level" column="level" jdbcType="VARCHAR"/>
             <result property="businessType" column="business_type" jdbcType="VARCHAR"/>
@@ -15,7 +15,6 @@
             <result property="operUrl" column="oper_url" jdbcType="VARCHAR"/>
             <result property="deleted" column="deleted" jdbcType="INTEGER"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -23,4 +22,53 @@
         deleted,`request_method`,oper_ip,
         create_time,update_time,oper_name,oper_time,oper_url
     </sql>
+
+    <sql id="page_List_Column">
+        id,`level`,business_type,
+        `request_method`,oper_ip,
+        create_time,oper_name,oper_time,oper_url
+    </sql>
+
+    <resultMap id="logVo" type="com.lsw.management.admin.model.vo.log.LogVo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="level" column="level" jdbcType="VARCHAR"/>
+        <result property="businessType" column="business_type" jdbcType="VARCHAR"/>
+        <result property="requestMethod" column="request_method" jdbcType="VARCHAR"/>
+        <result property="operIp" column="oper_ip" jdbcType="VARCHAR"/>
+        <result property="operName" column="oper_name" jdbcType="VARCHAR"/>
+        <result property="operTime" column="oper_time" jdbcType="VARCHAR"/>
+        <result property="operUrl" column="oper_url" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="pageList" resultMap="logVo">
+        SELECT
+            <include refid="page_List_Column"/>
+            FROM sys_log
+        <where>
+            <trim prefixOverrides="and">
+            <if test="queryDto.operIp != null and queryDto.operIp != ''">
+                AND sys_log.oper_ip LIKE concat('%',#{queryDto.operIp}, '%')
+            </if>
+            <if test="queryDto.level != null and queryDto.level != ''">
+                AND sys_log.level = #{queryDto.level}
+            </if>
+            <if test="queryDto.level != null and queryDto.level != ''">
+                AND sys_log.business_type = #{queryDto.businessType}
+            </if>
+            <if test="queryDto.operName != null and queryDto.operName != ''">
+                AND sys_log.oper_name LIKE concat('%',#{queryDto.operName}, '%')
+            </if>
+            <if test="queryDto.operUrl != null and queryDto.operUrl != ''">
+                AND sys_log.oper_url LIKE concat('%',#{queryDto.operUrl}, '%')
+            </if>
+            <if test="queryDto.requestMethod != null and queryDto.requestMethod != ''">
+                AND sys_log.request_method LIKE concat('%',#{queryDto.requestMethod}, '%')
+            </if>
+            <if test="queryDto.operTime != null and queryDto.operTime != ''">
+                AND sys_log.oper_time = #{queryDto.operTime}
+            </if>
+            </trim>
+        </where>
+    </select>
 </mapper>
