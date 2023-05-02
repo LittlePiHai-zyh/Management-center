@@ -1,7 +1,12 @@
 package com.lsw.management.admin.mapper;
 
+import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAuditFlowQueryDto;
 import com.lsw.management.admin.model.po.designProjectAuditFlow.DesignProjectAuditFlow;
-import tk.mybatis.mapper.common.BaseMapper;
+import com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowVo;
+import org.apache.ibatis.annotations.Param;
+import tk.mybatis.mapper.common.Mapper;
+
+import java.util.List;
 
 /**
 * @author 17533
@@ -9,8 +14,23 @@ import tk.mybatis.mapper.common.BaseMapper;
 * @createDate 2023-04-29 21:16:50
 * @Entity com.lsw.management.admin.model.po.designProjectAuditFlow.DesignProjectAuditFlow
 */
-public interface DesignProjectAuditFlowMapper extends BaseMapper<DesignProjectAuditFlow> {
+public interface DesignProjectAuditFlowMapper extends Mapper<DesignProjectAuditFlow> {
 
+    /**
+     * 系未审核查询
+     * @param queryDto /
+     * @return /
+     */
+    List<DesignProjectAuditFlowVo> departmentAuditListAll(@Param("queryDto") DesignProjectAuditFlowQueryDto queryDto);
+
+    /**
+     * 院未审核查询
+     * @param queryDto /
+     * @return /
+     */
+    List<DesignProjectAuditFlowVo> schoolAuditListAll(@Param("queryDto") DesignProjectAuditFlowQueryDto queryDto);
+
+    List<DesignProjectAuditFlowVo> listAll(@Param("queryDto") DesignProjectAuditFlowQueryDto queryDto);
 }
 
 

@@ -4,24 +4,126 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lsw.management.admin.mapper.DesignProjectAuditFlowMapper">
 
-    <resultMap id="BaseResultMap" type="com.lsw.management.admin.model.po.designProjectAuditFlow.DesignProjectAuditFlow">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="departmentAuditResult" column="department_audit_result" jdbcType="TINYINT"/>
-            <result property="departmentAuditUserId" column="department_audit_user_id" jdbcType="INTEGER"/>
-            <result property="schoolAuditUserId" column="school_audit_user_id" jdbcType="INTEGER"/>
-            <result property="schoolAuditTime" column="school_audit_time" jdbcType="TIMESTAMP"/>
-            <result property="schoolAuditResult" column="school_audit_result" jdbcType="TINYINT"/>
-            <result property="state" column="state" jdbcType="INTEGER"/>
-            <result property="departmentAuditTime" column="department_audit_time" jdbcType="TIMESTAMP"/>
-            <result property="topicId" column="topic_id" jdbcType="INTEGER"/>
-            <result property="departmentAuditOpinion" column="department_audit_opinion" jdbcType="VARCHAR"/>
-            <result property="schoolAuditUserOpinion" column="school_audit_user_opinion" jdbcType="VARCHAR"/>
+    <resultMap id="BaseResultMap"
+               type="com.lsw.management.admin.model.po.designProjectAuditFlow.DesignProjectAuditFlow">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="departmentAuditResult" column="department_audit_result" jdbcType="TINYINT"/>
+        <result property="departmentAuditUserId" column="department_audit_user_id" jdbcType="INTEGER"/>
+        <result property="schoolAuditUserId" column="school_audit_user_id" jdbcType="INTEGER"/>
+        <result property="schoolAuditTime" column="school_audit_time" jdbcType="TIMESTAMP"/>
+        <result property="schoolAuditResult" column="school_audit_result" jdbcType="TINYINT"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="departmentAuditTime" column="department_audit_time" jdbcType="TIMESTAMP"/>
+        <result property="topicId" column="topic_id" jdbcType="INTEGER"/>
+        <result property="departmentAuditOpinion" column="department_audit_opinion" jdbcType="VARCHAR"/>
+        <result property="schoolAuditUserOpinion" column="school_audit_user_opinion" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,department_audit_result,department_audit_user_id,
+        id
+        ,department_audit_result,department_audit_user_id,
         school_audit_user_id,school_audit_time,school_audit_result,
         state,department_audit_time,topic_id,
         department_audit_opinion,school_audit_user_opinion
     </sql>
+
+    <sql id="PageList_Vo">
+        dp.id,
+	IF(dp.department_audit_result=1, '通过', '驳回') as department_audit_result,
+	dp.school_audit_time,
+dp.department_audit_time,
+IF
+	( dp.school_audit_result = 1, '通过', '驳回' ) AS school_audit_result,
+	dp.`state`,
+	dp.department_audit_opinion,
+	dp.school_audit_user_opinion,
+	uf1.NAME AS department_audit_user_name,
+	uf2.NAME AS school_audit_user_name,
+	ts.title,
+	uf3.name as teacher_name
+    </sql>
+    <select id="departmentAuditListAll" resultMap="pageList_Resul_Type">
+        SELECT
+        <include refid="PageList_Vo"/>
+        FROM
+        design_project_audit_flow dp
+        LEFT JOIN user_info uf1 ON uf1.account_id = dp.department_audit_user_id
+        LEFT JOIN user_info uf2 ON uf2.account_id = dp.school_audit_user_id
+        LEFT JOIN topic_selection ts ON ts.id = dp.topic_id
+        LEFT JOIN user_info uf3 ON ts.teacher_id=uf3.account_id
+        <where>
+            dp.state =0
+            <if test="queryDto.title != null and queryDto.title != ''">
+                AND ts.title LIKE concat('%',#{queryDto.title}, '%')
+            </if>
+            <if test="queryDto.departmentAuditName != null and queryDto.departmentAuditName != ''">
+                AND uf1.name LIKE concat('%',#{queryDto.departmentAuditName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="schoolAuditListAll" resultMap="pageList_Resul_Type">
+            SELECT
+        <include refid="PageList_Vo"/>
+        design_project_audit_flow dp
+        LEFT JOIN user_info uf1 ON uf1.account_id = dp.department_audit_user_id
+        LEFT JOIN user_info uf2 ON uf2.account_id = dp.school_audit_user_id
+        LEFT JOIN topic_selection ts ON ts.id = dp.topic_id
+        LEFT JOIN user_info uf3 ON ts.teacher_id=uf3.account_id
+        <where>
+            dp.state =1
+            <if test="queryDto.title != null and queryDto.title != ''">
+                AND ts.title LIKE concat('%',#{queryDto.title}, '%')
+            </if>
+            <if test="queryDto.schoolAuditName != null and queryDto.schoolAuditName != ''">
+                AND uf2.name LIKE concat('%',#{queryDto.schoolAuditName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="listAll"
+            resultType="com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowVo">
+        SELECT
+        <include refid="PageList_Vo"/>
+            FROM
+        design_project_audit_flow dp
+        LEFT JOIN user_info uf1 ON uf1.account_id = dp.department_audit_user_id
+        LEFT JOIN user_info uf2 ON uf2.account_id = dp.school_audit_user_id
+        LEFT JOIN topic_selection ts ON ts.id = dp.topic_id
+        LEFT JOIN user_info uf3 ON ts.teacher_id=uf3.account_id
+        <where>
+            dp.state =2
+            <if test="queryDto.title != null and queryDto.title != ''">
+                AND ts.title LIKE concat('%',#{queryDto.title}, '%')
+            </if>
+            <if test="queryDto.schoolAuditName != null and queryDto.schoolAuditName != ''">
+                AND uf2.name LIKE concat('%',#{queryDto.schoolAuditName}, '%')
+            </if>
+            <if test="queryDto.title != null and queryDto.title != ''">
+                AND ts.title LIKE concat('%',#{queryDto.title}, '%')
+            </if>
+            <if test="queryDto.departmentAuditName != null and queryDto.departmentAuditName != ''">
+                AND uf1.name LIKE concat('%',#{queryDto.departmentAuditName}, '%')
+            </if>
+            <if test="queryDto.state != null and queryDto.state != ''">
+                AND dp.state = #{queryDto.state}
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="pageList_Resul_Type"
+               type="com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowVo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="departmentAuditResult" column="department_audit_result" jdbcType="VARCHAR"/>
+        <result property="departmentAuditUserName" column="department_audit_user_name" jdbcType="INTEGER"/>
+        <result property="schoolAuditUserName" column="school_audit_user_name" jdbcType="INTEGER"/>
+        <result property="schoolAuditTime" column="school_audit_time" jdbcType="TIMESTAMP"/>
+        <result property="schoolAuditResult" column="school_audit_result" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="departmentAuditTime" column="department_audit_time" jdbcType="TIMESTAMP"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="departmentAuditOpinion" column="department_audit_opinion" jdbcType="VARCHAR"/>
+        <result property="schoolAuditUserOpinion" column="school_audit_user_opinion" jdbcType="VARCHAR"/>
+        <result property="teacherName" column="teacher_name" jdbcType="VARCHAR"/>
+    </resultMap>
 </mapper>

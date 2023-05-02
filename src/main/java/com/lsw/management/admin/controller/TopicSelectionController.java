@@ -5,6 +5,7 @@ import com.lsw.management.admin.model.dto.topic.selection.TopicSelectionQueryDto
 import com.lsw.management.admin.model.dto.topic.selection.TopicSelectionUpdateDto;
 import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.topic.selection.MajorVo;
+import com.lsw.management.admin.model.vo.topic.selection.StudentTypeVo;
 import com.lsw.management.admin.model.vo.topic.selection.TopicSelectionVo;
 import com.lsw.management.admin.service.TopicSelectionService;
 import com.lsw.management.common.http.response.ApiResponse;
@@ -43,10 +44,16 @@ public class TopicSelectionController {
         return ResponseHelper.success(topicSelectionService.delete(ids));
     }
 
-    @ApiOperation(value = "毕设题目删除", httpMethod = "GET")
+    @ApiOperation(value = "获取专业", httpMethod = "GET")
     @GetMapping("/getMajor")
     public ApiResponse<List<MajorVo>> getMajor() {
         return ResponseHelper.success(topicSelectionService.getMajor());
+    }
+
+    @ApiOperation(value = "获取学生类型", httpMethod = "GET")
+    @GetMapping("/getStudentType")
+    public ApiResponse<List<StudentTypeVo>> getStudentType() {
+        return ResponseHelper.success(topicSelectionService.getStudentType());
     }
 
     @ApiOperation(value = "毕设题目更新", httpMethod = "POST")
@@ -61,7 +68,13 @@ public class TopicSelectionController {
         return ResponseHelper.success(topicSelectionService.listAll(queryDto));
     }
 
-    @ApiOperation(value = "毕设题目分页查询", httpMethod = "POST")
+    @ApiOperation(value = "可选毕设题目查询", httpMethod = "POST")
+    @PostMapping("/beApproved")
+    public ApiResponse<List<TopicSelectionVo>> beApproved(@RequestBody(required = false) TopicSelectionQueryDto queryDto) {
+        return ResponseHelper.success(topicSelectionService.beApproved(queryDto));
+    }
+
+    @ApiOperation(value = "审核通过的毕设题目", httpMethod = "POST")
     @PostMapping("/pageList")
     public ApiResponse<PageInfoVo<TopicSelectionVo>> pageList(@RequestBody(required = false) TopicSelectionQueryDto queryDto) {
         return ResponseHelper.success(topicSelectionService.pageList(queryDto));

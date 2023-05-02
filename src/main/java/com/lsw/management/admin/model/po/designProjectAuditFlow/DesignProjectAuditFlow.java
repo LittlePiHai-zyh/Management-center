@@ -37,6 +37,7 @@ public class DesignProjectAuditFlow implements Serializable {
     public static final String TOPIC_ID="topicId";
     public static final String DEPARTMENT_AUDIT_OPINION="departmentAuditOpinion";
     public static final String SCHOOL_AUDIT_USER_OPINION="schoolAuditUserOpinion";
+    public static final String DELETED="deleted";
 
     /**
      * 主键
@@ -57,14 +58,14 @@ public class DesignProjectAuditFlow implements Serializable {
     /**
      * 系负责人审核的用户ID
      */
-    @Field(field = "department_audit_user_id",comment = "系负责人审核的用户ID")
+    @Field(field = "department_audit_user_id",comment = "系负责人审核的用户ID，关联user_account表id")
     @Column(name = "department_audit_user_id")
     private Integer departmentAuditUserId;
 
     /**
      * 院负责人审核的用户ID
      */
-    @Field(field = "school_audit_user_id",comment = "院负责人审核的用户ID")
+    @Field(field = "school_audit_user_id",comment = "院负责人审核的用户ID,关联user_account表id")
     @Column(name = "school_audit_user_id")
     private Integer schoolAuditUserId;
 
@@ -90,6 +91,10 @@ public class DesignProjectAuditFlow implements Serializable {
     @Field(field = "state",comment = "当前审计状态，“0 未审核”、“1 系已审核”、“2 院已审核”等")
     @Column(name = "state")
     private Integer state;
+
+    @Field(field = "deleted",defaultValue = "0",comment = "是否删除 0否 1是")
+    @Column(name = "deleted")
+    private Byte deleted;
 
     /**
      * 系别审核时间

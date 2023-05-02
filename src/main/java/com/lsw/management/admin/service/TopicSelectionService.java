@@ -5,6 +5,7 @@ import com.lsw.management.admin.model.dto.topic.selection.TopicSelectionQueryDto
 import com.lsw.management.admin.model.dto.topic.selection.TopicSelectionUpdateDto;
 import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.topic.selection.MajorVo;
+import com.lsw.management.admin.model.vo.topic.selection.StudentTypeVo;
 import com.lsw.management.admin.model.vo.topic.selection.TopicSelectionVo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,4 +54,8 @@ public interface TopicSelectionService {
     PageInfoVo<TopicSelectionVo> pageList(TopicSelectionQueryDto queryDto);
 
     List<MajorVo> getMajor();
+
+    List<StudentTypeVo> getStudentType();
+
+    List<TopicSelectionVo> beApproved(TopicSelectionQueryDto queryDto);
 }

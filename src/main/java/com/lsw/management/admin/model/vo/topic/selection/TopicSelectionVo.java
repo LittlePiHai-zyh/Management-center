@@ -27,4 +27,6 @@ public class TopicSelectionVo {
     private Date createTime;
 
     private String direction;
+
+    private Integer state;
 }

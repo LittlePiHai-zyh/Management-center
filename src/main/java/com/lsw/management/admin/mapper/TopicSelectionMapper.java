@@ -17,6 +17,8 @@ import java.util.List;
 public interface TopicSelectionMapper extends Mapper<TopicSelection> {
 
     List<TopicSelectionVo> pageList(@Param("queryDto") TopicSelectionQueryDto queryDto);
+
+    List<TopicSelectionVo> beApproved(@Param("queryDto") TopicSelectionQueryDto queryDto);
 }
 
 

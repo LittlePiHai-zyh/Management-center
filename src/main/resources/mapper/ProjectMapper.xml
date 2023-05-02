@@ -11,7 +11,6 @@
             <result property="startDate" column="start_date" jdbcType="TIMESTAMP"/>
             <result property="endDate" column="end_date" jdbcType="TIMESTAMP"/>
             <result property="studentId" column="student_id" jdbcType="INTEGER"/>
-            <result property="teacherId" column="teacher_id" jdbcType="INTEGER"/>
             <result property="deleted" column="deleted" jdbcType="TINYINT"/>
     </resultMap>
 
@@ -20,4 +19,47 @@
         start_date,end_date,student_id,
         teacher_id,deleted
     </sql>
+
+    <sql id="List_All_Column_List">
+        p.id,
+	p.STATUS,
+	p.start_date,
+	p.end_date,
+	ts.title,
+	uf2.name as teacher_name,
+	uf1.name as student_name
+    </sql>
+
+
+    <select id="listAll" resultMap="listAll_type">
+        SELECT
+            <include refid="List_All_Column_List"/>
+        FROM
+        project p
+        LEFT JOIN user_info uf1 ON uf1.account_id = p.student_id
+        LEFT JOIN topic_selection ts ON ts.id = p.topic_id
+        LEFT JOIN user_info uf2 ON uf2.account_id = ts.teacher_id
+        <where>
+            p.deleted=0
+                <if test="queryDto.teacherName != null and queryDto.teacherName != ''">
+                    AND uf2.name LIKE concat('%',#{queryDto.teacherName}, '%')
+                </if>
+                <if test="queryDto.status != null and queryDto.status != ''">
+                    AND p.status = #{queryDto.status}
+                </if>
+                <if test="queryDto.studentName != null and queryDto.studentName != ''">
+                    AND uf1.name LIKE concat('%',#{queryDto.studentName}, '%')
+                </if>
+        </where>
+    </select>
+
+    <resultMap id="listAll_type" type="com.lsw.management.admin.model.vo.project.ProjectVo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="startDate" column="start_date" jdbcType="TIMESTAMP"/>
+        <result property="endDate" column="end_date" jdbcType="TIMESTAMP"/>
+        <result property="studentName" column="student_name" jdbcType="VARCHAR"/>
+        <result property="teacherName" column="teacher_name" jdbcType="VARCHAR"/>
+    </resultMap>
 </mapper>

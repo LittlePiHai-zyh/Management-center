@@ -25,19 +25,54 @@
     </sql>
 
     <sql id="pageList_Colum">
-        ts.id,ts.title,
-        ts.professional,ts.major,ts.student_type,
-        ts.student_num,ts.create_time,
-        ts.direction,
-        uf.name
+    ts.id,
+	ts.title,
+	ts.major,
+	ts.student_type,
+	ts.student_num,
+	ts.create_time,
+	ts.direction,
+	uf.NAME AS teacher_name,
+	dp.state
     </sql>
 
     <select id="pageList" resultMap="pageList_res">
         SELECT <include refid="pageList_Colum"/>
-            FROM topic_selection ts
-        LEFT JOIN user_info uf ON uf.id=ts.teacher_id
+        FROM
+        topic_selection ts
+        INNER JOIN design_project_audit_flow dp ON dp.topic_id=ts.id
+        LEFT JOIN user_info uf ON uf.id = ts.teacher_id
         <where>
             ts.deleted=0
+            <if test="queryDto.title != null and queryDto.title != ''">
+                AND ts.title LIKE concat('%',#{queryDto.title}, '%')
+            </if>
+            <if test="queryDto.direction != null and queryDto.direction != ''">
+                AND ts.direction LIKE concat('%',#{queryDto.direction}, '%')
+            </if>
+            <if test="queryDto.major != null and queryDto.major != ''">
+                AND ts.major = #{queryDto.major}
+            </if>
+            <if test="queryDto.studentType != null and queryDto.studentType != ''">
+                AND ts.student_type = #{queryDto.studentType}
+            </if>
+            <if test="queryDto.teacher != null and queryDto.teacher != ''">
+                AND uf.name = #{queryDto.teacher}
+            </if>
+        </where>
+    </select>
+    <select id="beApproved" resultMap="pageList_res">
+        SELECT <include refid="pageList_Colum"/>
+        FROM
+        topic_selection ts
+        INNER JOIN design_project_audit_flow dp ON dp.topic_id=ts.id
+        LEFT JOIN user_info uf ON uf.account_id = ts.teacher_id
+        INNER JOIN project ON project.topic_id=ts.id
+        <where>
+            ts.deleted = 0
+            AND dp.deleted = 0
+            AND dp.state = 2
+            AND project.STATUS =0
             <if test="queryDto.title != null and queryDto.title != ''">
                 AND ts.title LIKE concat('%',#{queryDto.title}, '%')
             </if>
@@ -59,11 +94,12 @@
     <resultMap id="pageList_res" type="com.lsw.management.admin.model.vo.topic.selection.TopicSelectionVo">
         <id property="id" column="id" jdbcType="INTEGER"/>
         <result property="title" column="title" jdbcType="VARCHAR"/>
-        <result property="teacherName" column="name" jdbcType="VARCHAR"/>
+        <result property="teacherName" column="teacher_name" jdbcType="VARCHAR"/>
         <result property="major" column="major" jdbcType="INTEGER"/>
         <result property="studentType" column="student_type" jdbcType="INTEGER"/>
         <result property="studentNum" column="student_num" jdbcType="INTEGER"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="direction" column="direction" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
     </resultMap>
 </mapper>
