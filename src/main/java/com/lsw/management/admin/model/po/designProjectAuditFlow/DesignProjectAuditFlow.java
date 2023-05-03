@@ -88,7 +88,7 @@ public class DesignProjectAuditFlow implements Serializable {
     /**
      * 当前审计状态，“0 未审核”、“1 系已审核”、“2 院已审核”等
      */
-    @Field(field = "state",comment = "当前审计状态，“0 未审核”、“1 系已审核”、“2 院已审核”等")
+    @Field(field = "state",comment = "当前审计状态，“0 未审核”、“1 系已审核”、“2 院已审核” 、“3已选题”等")
     @Column(name = "state")
     private Integer state;
 
@@ -118,6 +118,10 @@ public class DesignProjectAuditFlow implements Serializable {
     @Field(field = "department_audit_opinion",comment = "系负责人审核备注")
     @Column(name = "department_audit_opinion")
     private String departmentAuditOpinion;
+
+    @Field(field = "no_answer_opinion",comment = "免答审核备注")
+    @Column(name = "no_answer_opinion")
+    private String noAnswerOpinion;
 
     /**
      * 院负责人审核备注

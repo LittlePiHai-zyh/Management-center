@@ -61,11 +61,13 @@ public class TopicSelectionServiceImpl implements TopicSelectionService {
             BeanUtils.copyProperties(addDto, topicSelection);
             topicSelection.setCreateTime(new Date());
             topicSelection.setDeleted((byte) 0);
+            topicSelection.setStudent(0);
             UserAccount currentUser = userAccountService.getCurrentUser(request);
             topicSelection.setTeacherId(currentUser.getId());
             topicSelectionMapper.insert(topicSelection);
             DesignProjectAuditFlow designProjectAuditFlow = new DesignProjectAuditFlow();
             designProjectAuditFlow.setState(0);
+            designProjectAuditFlow.setDeleted((byte)0);
             designProjectAuditFlow.setTopicId(topicSelection.getId());
             return designProjectAuditFlowMapper.insert(designProjectAuditFlow);
         });
@@ -109,7 +111,19 @@ public class TopicSelectionServiceImpl implements TopicSelectionService {
 
     @Override
     public List<TopicSelectionVo> listAll(TopicSelectionQueryDto queryDto) {
-        return topicSelectionMapper.pageList(queryDto);
+        List<TopicSelectionVo> topicSelectionVos = topicSelectionMapper.pageList(queryDto);
+        topicSelectionVos.forEach(topicSelectionVo -> {
+            if((topicSelectionVo.getDepartmentAuditResult()!=null&&topicSelectionVo.getDepartmentAuditResult()==0)||
+                    (topicSelectionVo.getSchoolAuditResult()!=null&&topicSelectionVo.getSchoolAuditResult()==0)){
+                topicSelectionVo.setResult("驳回");
+            }else if((topicSelectionVo.getDepartmentAuditResult()!=null&&topicSelectionVo.getDepartmentAuditResult()==1)||
+                    (topicSelectionVo.getSchoolAuditResult()!=null&&topicSelectionVo.getSchoolAuditResult()==1)){
+                topicSelectionVo.setResult("通过");
+            }else{
+                topicSelectionVo.setResult("待定");
+            }
+        });
+        return topicSelectionVos;
     }
 
     @Override

@@ -6,8 +6,8 @@ import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAu
 import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAuditFlowsDepartmentAuditAddDto;
 import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAuditFlowsSchoolAuditAddDto;
 import com.lsw.management.admin.model.po.designProjectAuditFlow.DesignProjectAuditFlow;
-import com.lsw.management.admin.model.po.project.Project;
 import com.lsw.management.admin.model.po.user.UserAccount;
+import com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowPercent;
 import com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowVo;
 import com.lsw.management.admin.service.DesignProjectAuditFlowService;
 import com.lsw.management.admin.service.UserAccountService;
@@ -17,7 +17,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -60,23 +59,8 @@ public class DesignProjectAuditFlowServiceImpl implements DesignProjectAuditFlow
             BeanUtils.copyProperties(addDto, designProjectAuditFlow);
             designProjectAuditFlow.setSchoolAuditTime(new Date());
             //院负责人审核通过则将审核状态修改为同通过审核
-            if (addDto.getSchoolAuditResult() == 1) {
-                designProjectAuditFlow.setState(2);
-            }
-            designProjectAuditFlowMapper.updateByPrimaryKeySelective(designProjectAuditFlow);
-            //添加题目到学生可选题目中
-            Project project = new Project();
-            project.setTopicId(designProjectAuditFlow.getTopicId());
-            project.setCreateTime(new Date());
-            project.setStatus(0);
-            project.setDeleted(0);
-            project.setStartDate(new Date());
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            calendar.add(Calendar.MONTH, 6);
-            Date result = calendar.getTime();
-            project.setEndDate(result);
-            return projectMapper.insert(project);
+           designProjectAuditFlow.setState(2);
+            return designProjectAuditFlowMapper.updateByPrimaryKeySelective(designProjectAuditFlow);
         });
     }
 
@@ -93,5 +77,10 @@ public class DesignProjectAuditFlowServiceImpl implements DesignProjectAuditFlow
     @Override
     public List<DesignProjectAuditFlowVo> listAll(DesignProjectAuditFlowQueryDto queryDto) {
         return designProjectAuditFlowMapper.listAll(queryDto);
+    }
+
+    @Override
+    public List<DesignProjectAuditFlowPercent> designProjectAuditFlowPercent() {
+        return  designProjectAuditFlowMapper.designProjectAuditFlowPercent();
     }
 }

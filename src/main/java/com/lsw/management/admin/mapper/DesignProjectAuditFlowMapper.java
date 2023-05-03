@@ -2,6 +2,7 @@ package com.lsw.management.admin.mapper;
 
 import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAuditFlowQueryDto;
 import com.lsw.management.admin.model.po.designProjectAuditFlow.DesignProjectAuditFlow;
+import com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowPercent;
 import com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowVo;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
@@ -31,6 +32,8 @@ public interface DesignProjectAuditFlowMapper extends Mapper<DesignProjectAuditF
     List<DesignProjectAuditFlowVo> schoolAuditListAll(@Param("queryDto") DesignProjectAuditFlowQueryDto queryDto);
 
     List<DesignProjectAuditFlowVo> listAll(@Param("queryDto") DesignProjectAuditFlowQueryDto queryDto);
+
+    List<DesignProjectAuditFlowPercent> designProjectAuditFlowPercent();
 }
 
 

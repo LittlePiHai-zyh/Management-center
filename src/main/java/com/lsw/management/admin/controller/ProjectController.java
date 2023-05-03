@@ -1,8 +1,7 @@
 package com.lsw.management.admin.controller;
 
-import com.lsw.management.admin.model.dto.project.ProjectAddDto;
-import com.lsw.management.admin.model.dto.project.ProjectQueryDto;
-import com.lsw.management.admin.model.dto.project.ProjectUpdateDto;
+import com.lsw.management.admin.model.dto.project.*;
+import com.lsw.management.admin.model.vo.project.ProjectNoAnswerVo;
 import com.lsw.management.admin.model.vo.project.ProjectVo;
 import com.lsw.management.admin.service.ProjectService;
 import com.lsw.management.common.http.response.ApiResponse;
@@ -48,7 +47,25 @@ public class ProjectController {
 
     @ApiOperation(value = "学生选题进度更新", httpMethod = "POST")
     @PostMapping("/studentTopicSelectionUpdate")
-    private ApiResponse<Integer> studentTopicSelectionUpdate(@RequestParam ProjectUpdateDto updateDto){
+    private ApiResponse<Integer> studentTopicSelectionUpdate(@RequestBody ProjectUpdateDto updateDto){
         return ResponseHelper.success(projectService.studentTopicSelectionUpdate(updateDto));
+    }
+
+    @ApiOperation(value = "学生免答申请", httpMethod = "POST")
+    @PostMapping("/noAnswer")
+    private ApiResponse<Integer> noAnswer(@RequestParam String id){
+        return ResponseHelper.success(projectService.noAnswer(id));
+    }
+
+    @ApiOperation(value = "申请免答的学生", httpMethod = "POST")
+    @PostMapping("/noAnswerListAll")
+    private ApiResponse<List<ProjectNoAnswerVo>> noAnswerListAll(@RequestBody ProjectNoAnswerQueryDto queryDto){
+        return ResponseHelper.success(projectService.noAnswerListAll(queryDto));
+    }
+
+    @ApiOperation(value = "学生免答申请审核", httpMethod = "POST")
+    @PostMapping("/noAnswerAdd")
+    private ApiResponse<Integer> noAnswerAdd(@RequestBody ProjectNoAnswerAddDto addDto){
+        return ResponseHelper.success(projectService.noAnswerAdd(addDto));
     }
 }

@@ -30,6 +30,19 @@
 	uf1.name as student_name
     </sql>
 
+    <sql id="NO_Answer_List">
+        p.id,
+	p.STATUS,
+	p.start_date,
+	p.end_date,
+	ts.title,
+	ts.direction,
+	ts.major,
+            ts.id as topic_id,
+	ts.student_type,
+	uf2.name as teacher_name,
+	uf1.name as student_name
+    </sql>
 
     <select id="listAll" resultMap="listAll_type">
         SELECT
@@ -52,6 +65,54 @@
                 </if>
         </where>
     </select>
+
+
+    <select id="noAnswerListAll" resultMap="noAnswerListAll_column">
+        SELECT
+        <include refid="NO_Answer_List"/>
+        FROM
+        project p
+        LEFT JOIN user_info uf1 ON uf1.account_id = p.student_id
+        LEFT JOIN topic_selection ts ON ts.id = p.topic_id
+        LEFT JOIN user_info uf2 ON uf2.account_id = ts.teacher_id
+        <where>
+            p.deleted=0 AND p.STATUS=3
+            <if test="queryDto.teacherName != null and queryDto.teacherName != ''">
+                AND uf2.name LIKE concat('%',#{queryDto.teacherName}, '%')
+            </if>
+            <if test="queryDto.major != null and queryDto.major != ''">
+                AND ts.major = #{queryDto.major}
+            </if>
+            <if test="queryDto.studentType != null and queryDto.studentType != ''">
+                AND ts.student_type = #{queryDto.studentType}
+            </if>
+            <if test="queryDto.studentName != null and queryDto.studentName != ''">
+                AND uf1.name LIKE concat('%',#{queryDto.studentName}, '%')
+            </if>
+            <if test="queryDto.title != null and queryDto.title != ''">
+                AND ts.title LIKE concat('%',#{queryDto.title}, '%')
+            </if>
+            <if test="queryDto.direction != null and queryDto.direction != ''">
+                AND ts.direction LIKE concat('%',#{queryDto.direction}, '%')
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="noAnswerListAll_column" type="com.lsw.management.admin.model.vo.project.ProjectNoAnswerVo">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="startDate" column="start_date" jdbcType="TIMESTAMP"/>
+        <result property="endDate" column="end_date" jdbcType="TIMESTAMP"/>
+        <result property="studentName" column="student_name" jdbcType="VARCHAR"/>
+        <result property="teacherName" column="teacher_name" jdbcType="VARCHAR"/>
+        <result property="major" column="major" jdbcType="VARCHAR"/>
+        <result property="direction" column="direction" jdbcType="VARCHAR"/>
+        <result property="studentType" column="student_type" jdbcType="VARCHAR"/>
+        <result property="topicId" column="topic_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
 
     <resultMap id="listAll_type" type="com.lsw.management.admin.model.vo.project.ProjectVo">
         <id property="id" column="id" jdbcType="INTEGER"/>

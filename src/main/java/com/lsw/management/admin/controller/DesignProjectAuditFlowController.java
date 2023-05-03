@@ -3,16 +3,14 @@ package com.lsw.management.admin.controller;
 import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAuditFlowQueryDto;
 import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAuditFlowsDepartmentAuditAddDto;
 import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAuditFlowsSchoolAuditAddDto;
+import com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowPercent;
 import com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowVo;
 import com.lsw.management.admin.service.DesignProjectAuditFlowService;
 import com.lsw.management.common.http.response.ApiResponse;
 import com.lsw.management.common.http.response.ResponseHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -60,4 +58,11 @@ public class DesignProjectAuditFlowController {
     private ApiResponse<List<DesignProjectAuditFlowVo>> listAll(@RequestBody DesignProjectAuditFlowQueryDto queryDto){
         return ResponseHelper.success(designProjectAuditFlowService.listAll(queryDto));
     }
+
+    @ApiOperation(value = "获取审核占比", httpMethod = "GET")
+    @GetMapping("/percent")
+    private ApiResponse<List<DesignProjectAuditFlowPercent>> designProjectAuditFlowPercent(){
+        return ResponseHelper.success(designProjectAuditFlowService.designProjectAuditFlowPercent());
+    }
+
 }

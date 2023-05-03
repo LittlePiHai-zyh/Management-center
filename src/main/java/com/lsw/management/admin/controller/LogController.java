@@ -1,7 +1,6 @@
 package com.lsw.management.admin.controller;
 
 import com.lsw.management.admin.model.dto.log.LogQueryDto;
-import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.log.LogVo;
 import com.lsw.management.admin.service.LogService;
 import com.lsw.management.common.http.response.ApiResponse;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author: lsw
@@ -30,7 +30,7 @@ public class LogController {
 
     @ApiOperation(value = "系统日志分页查询", httpMethod = "POST")
     @PostMapping("/pageList")
-    public ApiResponse<PageInfoVo<LogVo>> pageList(@RequestBody LogQueryDto queryDto){
+    public ApiResponse<List<LogVo>> pageList(@RequestBody LogQueryDto queryDto){
         return ResponseHelper.success(logService.pageList(queryDto));
     }
 }

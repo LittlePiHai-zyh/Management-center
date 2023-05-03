@@ -9,6 +9,7 @@ import com.lsw.management.common.util.CaptchaUtils;
 import com.lsw.management.common.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -26,7 +27,7 @@ public class ImgVerifyCodeServiceImpl {
 
     public boolean verifyCaptcha(String uuid,String code){
         String verifyCode = verifyCodeCache.get(uuid);
-        return Objects.equals(verifyCode,code);
+        return Objects.equals(verifyCode.toLowerCase(Locale.ROOT),code.toLowerCase(Locale.ROOT));
     }
 
     public void checkCaptcha(String uuid,String code){

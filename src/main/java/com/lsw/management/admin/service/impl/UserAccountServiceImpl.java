@@ -61,14 +61,15 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public UserAccount getCurrentUser(HttpServletRequest request) {
-        UserAccountVo user = (UserAccountVo) request.getSession().getAttribute(GlobalConstants.SESSION_KEY);
+        Object user = request.getSession().getAttribute(GlobalConstants.SESSION_KEY);
+        UserAccountVo currentUser = (UserAccountVo) user;
         UserAccount userAccount;
-        if (user == null) {
+        if (currentUser == null) {
             userAccount = new UserAccount();
             userAccount.setUsername("anonymous");
         } else {
             Example example = new Example(UserAccount.class);
-            example.createCriteria().andEqualTo(UserAccount.ID, user.getId());
+            example.createCriteria().andEqualTo(UserAccount.ID, currentUser.getId());
             userAccount = userAccountMapper.selectOneByExample(example);
             if (userAccount == null) {
                 throw new BusinessException(ErrorCode.NOT_EXIST_USER);

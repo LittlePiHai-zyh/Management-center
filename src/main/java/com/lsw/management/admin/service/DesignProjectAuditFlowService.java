@@ -3,6 +3,7 @@ package com.lsw.management.admin.service;
 import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAuditFlowQueryDto;
 import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAuditFlowsDepartmentAuditAddDto;
 import com.lsw.management.admin.model.dto.designProjectAuditFlow.DesignProjectAuditFlowsSchoolAuditAddDto;
+import com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowPercent;
 import com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowVo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,4 +24,6 @@ public interface DesignProjectAuditFlowService {
     List<DesignProjectAuditFlowVo> schoolAuditQuery(DesignProjectAuditFlowQueryDto queryDto);
 
     List<DesignProjectAuditFlowVo> listAll(DesignProjectAuditFlowQueryDto queryDto);
+
+    List<DesignProjectAuditFlowPercent> designProjectAuditFlowPercent();
 }

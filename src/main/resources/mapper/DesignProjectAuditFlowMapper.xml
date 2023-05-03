@@ -28,55 +28,84 @@
     </sql>
 
     <sql id="PageList_Vo">
-        dp.id,
+        dp
+        .
+        id
+        ,
 	IF(dp.department_audit_result=1, '通过', '驳回') as department_audit_result,
-	dp.school_audit_time,
 dp.department_audit_time,
-IF
-	( dp.school_audit_result = 1, '通过', '驳回' ) AS school_audit_result,
 	dp.`state`,
 	dp.department_audit_opinion,
-	dp.school_audit_user_opinion,
 	uf1.NAME AS department_audit_user_name,
-	uf2.NAME AS school_audit_user_name,
 	ts.title,
-	uf3.name as teacher_name
+	uf3.name as teacher_name,
+            ts.student_num,
+ts.direction,
+ts.major,
+ts.student_type
+    </sql>
+
+    <sql id="department_column">
+        dp
+        .
+        id
+        ,
+	dp.`state`,
+	ts.title,
+uf3.NAME AS teacher_name,
+ts.student_num,
+ts.direction,
+ts.major,
+ts.student_type
     </sql>
     <select id="departmentAuditListAll" resultMap="pageList_Resul_Type">
+        SELECT
+        <include refid="department_column"/>
+        FROM
+        design_project_audit_flow dp
+        LEFT JOIN topic_selection ts ON ts.id = dp.topic_id
+        LEFT JOIN user_info uf3 ON ts.teacher_id = uf3.account_id
+        <where>
+            dp.state =0 and dp.deleted=0 and ts.deleted=0 AND dp.department_audit_result is  null
+            <if test="queryDto.title != null and queryDto.title != ''">
+                AND ts.title LIKE concat('%',#{queryDto.title}, '%')
+            </if>
+            <if test="queryDto.direction != null and queryDto.direction != ''">
+                AND ts.direction LIKE concat('%',#{queryDto.direction}, '%')
+            </if>
+            <if test="queryDto.major != null and queryDto.major != ''">
+                AND ts.major = #{queryDto.major}
+            </if>
+            <if test="queryDto.studentType != null and queryDto.studentType != ''">
+                AND ts.student_type = #{queryDto.studentType}
+            </if>
+        </where>
+    </select>
+
+    <select id="schoolAuditListAll" resultMap="pageList_Resul_Type">
         SELECT
         <include refid="PageList_Vo"/>
         FROM
         design_project_audit_flow dp
         LEFT JOIN user_info uf1 ON uf1.account_id = dp.department_audit_user_id
-        LEFT JOIN user_info uf2 ON uf2.account_id = dp.school_audit_user_id
         LEFT JOIN topic_selection ts ON ts.id = dp.topic_id
         LEFT JOIN user_info uf3 ON ts.teacher_id=uf3.account_id
         <where>
-            dp.state =0
+            dp.state =1 AND dp.deleted=0 AND ts.deleted=0 AND dp.department_audit_result=1 AND dp.school_audit_result IS NULL
             <if test="queryDto.title != null and queryDto.title != ''">
                 AND ts.title LIKE concat('%',#{queryDto.title}, '%')
             </if>
             <if test="queryDto.departmentAuditName != null and queryDto.departmentAuditName != ''">
                 AND uf1.name LIKE concat('%',#{queryDto.departmentAuditName}, '%')
             </if>
-        </where>
-    </select>
-
-    <select id="schoolAuditListAll" resultMap="pageList_Resul_Type">
-            SELECT
-        <include refid="PageList_Vo"/>
-        design_project_audit_flow dp
-        LEFT JOIN user_info uf1 ON uf1.account_id = dp.department_audit_user_id
-        LEFT JOIN user_info uf2 ON uf2.account_id = dp.school_audit_user_id
-        LEFT JOIN topic_selection ts ON ts.id = dp.topic_id
-        LEFT JOIN user_info uf3 ON ts.teacher_id=uf3.account_id
-        <where>
-            dp.state =1
-            <if test="queryDto.title != null and queryDto.title != ''">
-                AND ts.title LIKE concat('%',#{queryDto.title}, '%')
+            <if test="queryDto.direction != null and queryDto.direction != ''">
+                AND ts.direction LIKE concat('%',#{queryDto.direction}, '%')
             </if>
-            <if test="queryDto.schoolAuditName != null and queryDto.schoolAuditName != ''">
-                AND uf2.name LIKE concat('%',#{queryDto.schoolAuditName}, '%')
+            <if test="queryDto.major != null and queryDto.major != ''">
+                AND ts.major = #{queryDto.major}
+            </if>
+            <if test="queryDto.studentType != null and queryDto.studentType != ''">
+                AND ts.student_type = #{queryDto.studentType}
             </if>
         </where>
     </select>
@@ -85,7 +114,7 @@ IF
             resultType="com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowVo">
         SELECT
         <include refid="PageList_Vo"/>
-            FROM
+        FROM
         design_project_audit_flow dp
         LEFT JOIN user_info uf1 ON uf1.account_id = dp.department_audit_user_id
         LEFT JOIN user_info uf2 ON uf2.account_id = dp.school_audit_user_id
@@ -110,6 +139,28 @@ IF
             </if>
         </where>
     </select>
+    <select id="designProjectAuditFlowPercent"
+            resultType="com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowPercent">
+        SELECT
+            COUNT(*) AS value,
+    CASE
+        WHEN department_audit_result = 1 AND school_audit_result = 1 THEN '审核通过'
+        WHEN department_audit_result = 0 OR school_audit_result = 0 THEN '审核未通过'
+        ELSE '未审核'
+        END AS name
+FROM
+    design_project_audit_flow
+WHERE
+    deleted = 0
+    OR department_audit_result IS NULL
+    OR school_audit_result IS NULL
+GROUP BY
+    CASE
+        WHEN department_audit_result = 1 AND school_audit_result = 1 THEN '审核通过'
+        WHEN department_audit_result = 0 OR school_audit_result = 0 THEN '审核未通过'
+        ELSE '未审核'
+        END;
+    </select>
 
     <resultMap id="pageList_Resul_Type"
                type="com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowVo">
@@ -125,5 +176,9 @@ IF
         <result property="departmentAuditOpinion" column="department_audit_opinion" jdbcType="VARCHAR"/>
         <result property="schoolAuditUserOpinion" column="school_audit_user_opinion" jdbcType="VARCHAR"/>
         <result property="teacherName" column="teacher_name" jdbcType="VARCHAR"/>
+        <result property="studentNum" column="student_num" jdbcType="VARCHAR"/>
+        <result property="direction" column="direction" jdbcType="VARCHAR"/>
+        <result property="studentType" column="student_type" jdbcType="INTEGER"/>
+        <result property="major" column="major" jdbcType="INTEGER"/>
     </resultMap>
 </mapper>

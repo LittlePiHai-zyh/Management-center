@@ -8,6 +8,7 @@ import com.lsw.management.admin.model.dto.user.PermissionVo;
 import com.lsw.management.admin.model.dto.user.UserLoginDto;
 import com.lsw.management.admin.model.dto.user.UserQueryDto;
 import com.lsw.management.admin.model.dto.user.UserRegistryDto;
+import com.lsw.management.admin.model.po.user.UserAccount;
 import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.VerifyImgResult;
 import com.lsw.management.admin.model.vo.user.UserAccountVo;
@@ -60,7 +61,7 @@ public class UserController {
     public ApiResponse<UserAccountVo> baseLogin(@Validated @RequestBody UserLoginDto user, HttpServletRequest request) {
         String verifyCode = user.getVerifyCode();
         String randomKey = user.getRandomKey();
-//        imgVerifyCodeService.checkCaptcha(randomKey,verifyCode);
+        imgVerifyCodeService.checkCaptcha(randomKey,verifyCode);
         UserAccountVo userAccountVo = userService.baseLogin(user, request);
         return ResponseHelper.success(userAccountVo);
     }
@@ -111,5 +112,11 @@ public class UserController {
     @GetMapping("/getPermissions")
     public ApiResponse<List<PermissionVo>> getPermissions(){
         return ResponseHelper.success(userService.getPermissions());
+    }
+
+    @ApiOperation(value = "获取登录的用户", httpMethod = "GET")
+    @GetMapping("/getCurrentUser")
+    public ApiResponse<UserAccount> getCurrentUser(HttpServletRequest request){
+        return ResponseHelper.success(userService.getCurrentUser(request));
     }
 }

@@ -29,4 +29,10 @@ public class DesignProjectAuditFlowQueryDto {
      * 毕设题目
      */
     private String title;
+
+    private String direction;
+
+    private Integer studentType;
+
+    private Integer major;
 }

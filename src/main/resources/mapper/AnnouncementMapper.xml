@@ -40,6 +40,19 @@
                 </if>
         </where>
     </select>
+    <select id="oneAnnouncement" resultMap="announcementVo_Column">
+        SELECT
+        <include refid="pageList_Column"/>
+        FROM
+            announcement LEFT JOIN user_account u ON u.id=announcement.account_id
+        WHERE
+        announcement.deleted=0
+        ORDER BY
+        announcement.create_time DESC
+            LIMIT
+    1;
+
+    </select>
 
     <resultMap id="announcementVo_Column" type="com.lsw.management.admin.model.vo.announcement.AnnouncementVo">
         <id property="id" column="id" jdbcType="INTEGER"/>

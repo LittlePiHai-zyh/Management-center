@@ -33,7 +33,9 @@
 	ts.create_time,
 	ts.direction,
 	uf.NAME AS teacher_name,
-	dp.state
+	dp.state,
+     dp.department_audit_result ,
+        dp.school_audit_result
     </sql>
 
     <select id="pageList" resultMap="pageList_res">
@@ -43,7 +45,7 @@
         INNER JOIN design_project_audit_flow dp ON dp.topic_id=ts.id
         LEFT JOIN user_info uf ON uf.id = ts.teacher_id
         <where>
-            ts.deleted=0
+            ts.deleted=0 AND dp.deleted=0
             <if test="queryDto.title != null and queryDto.title != ''">
                 AND ts.title LIKE concat('%',#{queryDto.title}, '%')
             </if>
@@ -67,12 +69,10 @@
         topic_selection ts
         INNER JOIN design_project_audit_flow dp ON dp.topic_id=ts.id
         LEFT JOIN user_info uf ON uf.account_id = ts.teacher_id
-        INNER JOIN project ON project.topic_id=ts.id
         <where>
             ts.deleted = 0
             AND dp.deleted = 0
-            AND dp.state = 2
-            AND project.STATUS =0
+            AND dp.state = 2 AND dp.school_audit_result=1
             <if test="queryDto.title != null and queryDto.title != ''">
                 AND ts.title LIKE concat('%',#{queryDto.title}, '%')
             </if>
@@ -101,5 +101,7 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
         <result property="direction" column="direction" jdbcType="VARCHAR"/>
         <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="departmentAuditResult" column="department_audit_result" jdbcType="VARCHAR"/>
+        <result property="schoolAuditResult" column="school_audit_result" jdbcType="VARCHAR"/>
     </resultMap>
 </mapper>

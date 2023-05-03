@@ -2,8 +2,9 @@ package com.lsw.management.admin.service;
 
 import com.lsw.management.admin.model.dto.log.LogQueryDto;
 import com.lsw.management.admin.model.po.log.SysLog;
-import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.log.LogVo;
+
+import java.util.List;
 
 /**
  * @author zhangyh
@@ -13,7 +14,7 @@ import com.lsw.management.admin.model.vo.log.LogVo;
 public interface LogService {
 
 
-    PageInfoVo<LogVo> pageList(LogQueryDto queryDto);
+    List<LogVo> pageList(LogQueryDto queryDto);
 
     Integer saveLog(SysLog sysLog);
 }

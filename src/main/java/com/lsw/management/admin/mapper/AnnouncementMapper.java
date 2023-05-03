@@ -17,6 +17,8 @@ import java.util.List;
 public interface AnnouncementMapper extends Mapper<Announcement> {
 
     List<AnnouncementVo> pageList(@Param("queryDto") AnnouncementQueryDto queryDto);
+
+    AnnouncementVo oneAnnouncement();
 }
 
 

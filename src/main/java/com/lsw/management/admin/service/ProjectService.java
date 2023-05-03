@@ -1,8 +1,7 @@
 package com.lsw.management.admin.service;
 
-import com.lsw.management.admin.model.dto.project.ProjectAddDto;
-import com.lsw.management.admin.model.dto.project.ProjectQueryDto;
-import com.lsw.management.admin.model.dto.project.ProjectUpdateDto;
+import com.lsw.management.admin.model.dto.project.*;
+import com.lsw.management.admin.model.vo.project.ProjectNoAnswerVo;
 import com.lsw.management.admin.model.vo.project.ProjectVo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,4 +20,10 @@ public interface ProjectService {
     List<ProjectVo> studentTopicSelectionProcess(ProjectQueryDto addDto);
 
     Integer studentTopicSelectionUpdate(ProjectUpdateDto updateDto);
+
+    Integer noAnswer(String id);
+
+    List<ProjectNoAnswerVo> noAnswerListAll(ProjectNoAnswerQueryDto queryDto);
+
+    Integer noAnswerAdd(ProjectNoAnswerAddDto addDto);
 }

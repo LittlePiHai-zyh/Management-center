@@ -60,4 +60,10 @@ public class AnnouncementController {
         return ResponseHelper.success(announcementService.pageList(queryDto));
     }
 
+    @ApiOperation(value = "最新公告查询", httpMethod = "GET")
+    @GetMapping("/one")
+    public ApiResponse<AnnouncementVo> oneAnnouncement() {
+        return ResponseHelper.success(announcementService.oneAnnouncement());
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.lsw.management.admin.model.vo.designProjectAuditFlow;
+package com.lsw.management.admin.model.vo.project;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
@@ -11,44 +11,37 @@ import static com.lsw.management.common.constants.GlobalConstants.TIME_PATTERN;
 /**
  * @Author: lsw
  * @desc
- * @date: 2023/5/1  11:26
+ * @date: 2023/5/3  17:07
  */
 @Data
-public class DesignProjectAuditFlowVo {
+public class ProjectNoAnswerVo {
 
     private Integer id;
 
-    private String departmentAuditResult;
-
-    private String departmentAuditUserName;
-
-    private String schoolAuditUserName;
-
-    @JsonFormat(pattern =TIME_PATTERN, timezone = "GMT+8")
-    @DateTimeFormat(pattern = TIME_PATTERN)
-    private Date schoolAuditTime;
-
-    private String schoolAuditResult;
-
-    private String state;
-
-    @JsonFormat(pattern =TIME_PATTERN, timezone = "GMT+8")
-    @DateTimeFormat(pattern = TIME_PATTERN)
-    private Date departmentAuditTime;
-
+    /**
+     * 毕设题目
+     */
     private String title;
 
-    private String schoolAuditUserOpinion;
+    private Integer status;
 
-    private String departmentAuditOpinion;
+    @JsonFormat(pattern =TIME_PATTERN, timezone = "GMT+8")
+    @DateTimeFormat(pattern = TIME_PATTERN)
+    private Date startDate;
+
+    @JsonFormat(pattern =TIME_PATTERN, timezone = "GMT+8")
+    @DateTimeFormat(pattern = TIME_PATTERN)
+    private Date endDate;
+
+    private String studentName;
 
     private String teacherName;
-
-    private String studentNum;
 
     private String direction;
 
     private Integer major;
+
+    private Integer topicId;
 
     private Integer studentType;
 }

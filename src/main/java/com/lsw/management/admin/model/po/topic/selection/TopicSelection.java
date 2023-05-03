@@ -73,6 +73,13 @@ public class TopicSelection implements Serializable {
     private Integer major;
 
     /**
+     * 适合专业
+     */
+    @Field(field = "student",comment = "当前选题学生数")
+    @Column(name = "student")
+    private Integer student;
+
+    /**
      * 学生类型 0本科生 1研究生 2博士生
      */
     @Field(field = "student_type",defaultValue = "0",comment = "学生类型 0本科生 1研究生 2博士生")
@@ -82,7 +89,7 @@ public class TopicSelection implements Serializable {
     /**
      * 指导学生数
      */
-    @Field(field = "student_num",defaultValue = "0",comment = "指导学生数")
+    @Field(field = "student_num",defaultValue = "0",comment = "可选题数")
     @Column(name = "student_num")
     private Integer studentNum;
 

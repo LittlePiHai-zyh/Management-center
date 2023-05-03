@@ -24,7 +24,5 @@ public class DesignProjectAuditFlowsSchoolAuditAddDto {
 
     private String schoolAuditUserOpinion;
 
-    private Integer topicId;
-
     private Integer departmentAuditResult;
 }

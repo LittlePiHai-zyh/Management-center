@@ -100,4 +100,9 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         announcement.setUpdateTime(new Date());
         return announcementMapper.updateByPrimaryKeySelective(announcement);
     }
+
+    @Override
+    public AnnouncementVo oneAnnouncement() {
+        return announcementMapper.oneAnnouncement();
+    }
 }

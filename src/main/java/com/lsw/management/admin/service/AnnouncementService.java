@@ -48,4 +48,6 @@ public interface AnnouncementService {
     PageInfoVo<AnnouncementVo> pageList(AnnouncementQueryDto queryDto);
 
     Integer update(AnnouncementUpdateDto updateDto);
+
+    AnnouncementVo oneAnnouncement();
 }
