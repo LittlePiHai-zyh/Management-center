@@ -18,7 +18,7 @@ public interface MenuService {
 
     Integer delete(String ids, HttpServletRequest request);
 
-    List<MenuVo> listAll(MenuQueryDto queryDto,String permissions);
+    List<MenuVo> listAll(MenuQueryDto queryDto,HttpServletRequest request);
 
     PageInfoVo<MenuVo> pageList(MenuQueryDto queryDto);
 }

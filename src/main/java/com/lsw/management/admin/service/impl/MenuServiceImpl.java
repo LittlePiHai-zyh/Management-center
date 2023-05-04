@@ -71,20 +71,23 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<MenuVo> listAll(MenuQueryDto queryDto,String permissions) {
+    public List<MenuVo> listAll(MenuQueryDto queryDto,HttpServletRequest request) {
+        UserAccount currentUser = userAccountService.getCurrentUser(request);
+
         Example example = new Example(Menu.class);
         example.createCriteria()
+                .andEqualTo(Menu.DELETED,0)
                 .andEqualTo(Menu.HIDDEN, queryDto.getHidden())
                 .andLike(Menu.NAME, queryDto.getName())
                 .andEqualTo(Menu.PERMISSIONS, queryDto.getPermissions())
                 .andEqualTo(Menu.PID, queryDto.getPid())
                 .andLike(Menu.TITTLE,queryDto.getTitle());
         List<Menu> menus = menuMapper.selectByExample(example);
-        if(StringUtils.isBlank(permissions)){
+        if(StringUtils.isBlank(currentUser.getRoles())){
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         //权限校验过滤菜单
-        String[] roles = permissions.split(",");
+        String[] roles = currentUser.getRoles().split(",");
         List<Menu> permissionsMenu = menus.stream().filter(menu -> {
             String[] menuPermissions = menu.getPermissions().split(",");
             for (String role : menuPermissions) {

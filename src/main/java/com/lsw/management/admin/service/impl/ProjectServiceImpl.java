@@ -128,7 +128,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = new Project();
         BeanUtils.copyProperties(updateDto, project);
         if(updateDto.getStatus()==2){
-            updateDto.setStatus(3);
+            project.setStatus(3);
         }
         project.setUpdateTime(new Date());
         return projectMapper.updateByPrimaryKeySelective(project);

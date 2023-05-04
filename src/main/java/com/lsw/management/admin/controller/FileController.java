@@ -1,49 +1,70 @@
 package com.lsw.management.admin.controller;
 
 import cn.hutool.core.lang.UUID;
+import com.lsw.management.common.constants.ErrorCode;
+import com.lsw.management.common.exception.BusinessException;
+import com.lsw.management.common.http.response.ApiResponse;
+import com.lsw.management.common.http.response.ResponseHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * @Author: lsw
  * @desc
  * @date: 2023/5/4  8:23
  */
+@Slf4j
 @RequestMapping("/fileManage")
 @RestController
 @Api(tags = "文件管理模块")
 public class FileController {
+
     // 文件上传
     @ApiOperation(value = "文件上传", httpMethod = "POST")
     @PostMapping("/upload")
-    public String upload(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return "上传失败，请选择文件";
+    public ApiResponse<String> upload(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) {
+        if (files.isEmpty()) {
+            throw new BusinessException(ErrorCode.INVALID_PARAMS, "文件不能为空");
         }
         try {
-            // 上传的文件名
-            String originalFilename = file.getOriginalFilename();
             // 上传到的目录路径
             String uploadPath = "/upload/path/";
-            // 生成新的文件名
-            String newFilename = UUID.randomUUID()+ getFileExtension(originalFilename);
-            // 构建上传文件的完整路径
-            String filePath = uploadPath + newFilename;
-            // 上传文件
-            Files.write(Paths.get(filePath), file.getBytes());
+            // 遍历上传文件
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) {
+                    throw new BusinessException(ErrorCode.INVALID_PARAMS, "文件不能为空");
+                }
+                // 上传的文件名
+                String originalFilename = file.getOriginalFilename();
+                // 生成新的文件名
+                String newFilename = UUID.randomUUID() + getFileExtension(originalFilename);
+                // 构建上传文件的完整路径
+                String filePath = uploadPath + newFilename;
+                // 创建目录路径
+                Files.createDirectories(Paths.get(uploadPath));
+                // 上传文件
+                Files.write(Paths.get(filePath), file.getBytes());
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            return "上传失败";
+            log.error("上传失败");
+            return ResponseHelper.failed(ErrorCode.SYSTEM_ERROR);
         }
-        return "上传成功";
+        log.info("上传成功");
+        return ResponseHelper.success("上传成功");
     }
+
+
 
     @ApiOperation(value = "文件下载", httpMethod = "GET")
     // 文件下载

@@ -43,8 +43,8 @@ public class MenuController {
 
     @ApiOperation(value = "根据权限查菜单", httpMethod = "POST")
     @PostMapping("/listAll")
-    public ApiResponse<List<MenuVo>> listAll(@RequestBody MenuQueryDto queryDto,String permissions) {
-        return ResponseHelper.success(menuService.listAll(queryDto,permissions));
+    public ApiResponse<List<MenuVo>> listAll(@RequestBody MenuQueryDto queryDto,HttpServletRequest request) {
+        return ResponseHelper.success(menuService.listAll(queryDto,request));
     }
 
     @ApiOperation(value = "菜单分页查询", httpMethod = "POST")
