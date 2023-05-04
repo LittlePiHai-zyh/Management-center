@@ -29,6 +29,7 @@ import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -78,12 +79,27 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Integer studentTopicSelection(ProjectAddDto addDto, HttpServletRequest request) {
         return transactionTemplate.execute(status -> {
+            Example example2 = new Example(Project.class);
+            example2.createCriteria()
+                    .andEqualTo(Project.DELETED,0)
+                    .andEqualTo(Project.TOPIC_ID,addDto.getTopicId())
+                    .andEqualTo(Project.STUDENT_ID,addDto.getStudentId());
+            if(projectMapper.selectCountByExample(example2)>0){
+                throw new BusinessException(ErrorCode.SELECTED_TOPIC);
+            }
             Project project = new Project();
             BeanUtils.copyProperties(addDto, project);
             UserAccount currentUser = userAccountService.getCurrentUser(request);
             project.setStudentId(currentUser.getId());
             project.setStatus(0);
             project.setDeleted(0);
+            project.setStartDate(new Date());
+            Date currentDate = new Date();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(currentDate);
+            calendar.add(Calendar.MONTH, 6);
+            Date dateAfter6Months = calendar.getTime();
+            project.setEndDate(dateAfter6Months);
             project.setCreateTime(new Date());
             int res = projectMapper.insert(project);
             //查询可选学生数量

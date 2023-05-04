@@ -1,6 +1,9 @@
 package com.lsw.management.admin.controller;
 
-import cn.hutool.core.lang.UUID;
+import com.lsw.management.admin.mapper.FileMapper;
+import com.lsw.management.admin.model.po.file.File;
+import com.lsw.management.admin.model.po.user.UserAccount;
+import com.lsw.management.admin.service.UserAccountService;
 import com.lsw.management.common.constants.ErrorCode;
 import com.lsw.management.common.exception.BusinessException;
 import com.lsw.management.common.http.response.ApiResponse;
@@ -10,13 +13,18 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Author: lsw
@@ -29,12 +37,22 @@ import java.util.List;
 @Api(tags = "文件管理模块")
 public class FileController {
 
+    @Resource
+    private UserAccountService userAccountService;
+
+    @Resource
+    FileMapper fileMapper;
+
     // 文件上传
     @ApiOperation(value = "文件上传", httpMethod = "POST")
     @PostMapping("/upload")
     public ApiResponse<String> upload(@RequestParam("file") List<MultipartFile> files, HttpServletRequest request) {
         if (files.isEmpty()) {
             throw new BusinessException(ErrorCode.INVALID_PARAMS, "文件不能为空");
+        }
+        UserAccount currentUser = userAccountService.getCurrentUser(request);
+        if(currentUser==null){
+            throw new BusinessException(ErrorCode.UNLOGIN);
         }
         try {
             // 上传到的目录路径
@@ -49,6 +67,13 @@ public class FileController {
                 // 生成新的文件名
                 String newFilename = UUID.randomUUID() + getFileExtension(originalFilename);
                 // 构建上传文件的完整路径
+                File myFile = File.builder()
+                        .fileName(newFilename)
+                        .createTime(new Date())
+                        .deleted((byte) 0)
+                        .accountId(currentUser.getId())
+                        .build();
+                fileMapper.insert(myFile);
                 String filePath = uploadPath + newFilename;
                 // 创建目录路径
                 Files.createDirectories(Paths.get(uploadPath));
@@ -64,28 +89,38 @@ public class FileController {
         return ResponseHelper.success("上传成功");
     }
 
-
-
     @ApiOperation(value = "文件下载", httpMethod = "GET")
-    // 文件下载
-    @GetMapping("/download/{filename}")
-    public void download(@PathVariable String filename, HttpServletResponse response) {
+    @GetMapping("/download")
+    public void download(@RequestParam String accountId, HttpServletResponse response) {
         try {
             // 下载文件的完整路径
-            String filePath = "/upload/path/" + filename;
+            String filePath = "/upload/path/";
             // 读取文件数据
-            byte[] data = Files.readAllBytes(Paths.get(filePath));
 
+            Example example = new Example(File.class);
+            example.createCriteria().andEqualTo("deleted", 0)
+                    .andEqualTo("accountId", accountId);
+            File file = fileMapper.selectOneByExample(example);
+            if(file == null) {
+                throw new BusinessException(ErrorCode.FILE_NOT_EXIT);
+            }
+            Path path = Paths.get(filePath + file.getFileName());
+            byte[] data = Files.readAllBytes(path);
             // 设置文件响应类型
-            response.setContentType("application/octet-stream");
+//            response.setContentType("application/octet-stream");
+            response.setContentType("application/force-download");
+            // 设置文件大小
+            response.setContentLength(data.length);
+            response.setCharacterEncoding("UTF-8");
             // 设置文件名称
-            response.setHeader("Content-disposition", "attachment;filename=" + filename);
+            response.setHeader("Content-disposition", "attachment;filename=" + file.getFileName());
             // 将文件数据写入响应输出流中
             response.getOutputStream().write(data);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     // 获取文件后缀名
     private String getFileExtension(String filename) {

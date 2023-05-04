@@ -15,6 +15,9 @@ import static com.lsw.management.common.constants.GlobalConstants.TIME_PATTERN;
  */
 @Data
 public class ProjectVo {
+
+    private Integer studentId;
+
     private Integer id;
 
     /**

@@ -20,6 +20,8 @@ public enum ErrorCode {
     ACCOUNT_DUPLICATE(4010,"账号重复" ),
     NO_LOCALE_RESOLVER_FOUND(4011,"不存在Local" ),
     //5000为系统异常
+    FILE_NOT_EXIT(4012,"文件不存在"),
+    SELECTED_TOPIC(4013,"已经选题"),
     SYSTEM_ERROR(5000, "系统内部异常"),
     OPERATION_ERROR(5001, "操作失败"), ;
 
@@ -39,4 +41,5 @@ public enum ErrorCode {
     public int getCode() {
         return code;
     }
+
 }

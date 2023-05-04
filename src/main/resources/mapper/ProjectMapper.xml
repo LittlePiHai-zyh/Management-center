@@ -31,7 +31,8 @@
 	p.end_date,
 	ts.title,
 	uf2.name as teacher_name,
-	uf1.name as student_name
+	uf1.name as student_name,
+            p.student_id
     </sql>
 
     <sql id="NO_Answer_List">
@@ -130,7 +131,7 @@ GROUP BY
         ,
 	 p.end_date,
 	 ts.title,
-	 uf.name as teacherName,
+	 uf.name as teacher_name,
 	 ts.major,
 	 ts.direction,
 	 ts.student_type,
@@ -175,6 +176,7 @@ GROUP BY
 
     <resultMap id="listAll_type" type="com.lsw.management.admin.model.vo.project.ProjectVo">
         <id property="id" column="id" jdbcType="INTEGER"/>
+        <id property="studentId" column="student_id" jdbcType="INTEGER"/>
         <result property="title" column="title" jdbcType="INTEGER"/>
         <result property="status" column="status" jdbcType="INTEGER"/>
         <result property="startDate" column="start_date" jdbcType="TIMESTAMP"/>

@@ -8,7 +8,7 @@ import com.lsw.management.admin.model.vo.project.ProjectNoAnswerVo;
 import com.lsw.management.admin.model.vo.project.ProjectStatusVo;
 import com.lsw.management.admin.model.vo.project.ProjectVo;
 import org.apache.ibatis.annotations.Param;
-import tk.mybatis.mapper.common.BaseMapper;
+import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
 * @createDate 2023-04-29 21:18:48
 * @Entity com.lsw.management.admin.model.po.project.Project
 */
-public interface ProjectMapper extends BaseMapper<Project> {
+public interface ProjectMapper extends Mapper<Project> {
 
     List<ProjectVo> listAll(@Param("queryDto") ProjectQueryDto queryDto);
 
