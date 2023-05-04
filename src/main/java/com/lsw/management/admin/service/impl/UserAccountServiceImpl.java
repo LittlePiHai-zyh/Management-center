@@ -11,13 +11,13 @@ import com.lsw.management.admin.model.dto.user.UserQueryDto;
 import com.lsw.management.admin.model.dto.user.UserRegistryDto;
 import com.lsw.management.admin.model.po.user.UserAccount;
 import com.lsw.management.admin.model.po.user.UserInfo;
+import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.user.UserAccountVo;
 import com.lsw.management.admin.model.vo.user.UserVo;
 import com.lsw.management.admin.service.UserAccountService;
 import com.lsw.management.common.constants.ErrorCode;
-import com.lsw.management.common.constants.GlobalConstants;
-import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.common.exception.BusinessException;
+import com.lsw.management.common.util.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +61,9 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public UserAccount getCurrentUser(HttpServletRequest request) {
-        Object user = request.getSession().getAttribute(GlobalConstants.SESSION_KEY);
-        UserAccountVo currentUser = (UserAccountVo) user;
+        String authToken = request.getHeader("Authorization");
+        String token = authToken.substring("Bearer".length() + 1).trim();
+        UserAccountVo currentUser = JwtUtils.parseToken(token);
         UserAccount userAccount;
         if (currentUser == null) {
             userAccount = new UserAccount();
@@ -79,7 +80,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public UserAccountVo baseLogin(UserLoginDto user, HttpServletRequest request) {
+    public String baseLogin(UserLoginDto user, HttpServletRequest request) {
         String password = user.getPassword();
         Example example = new Example(UserAccount.class);
         example.createCriteria()
@@ -95,8 +96,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         }
         UserAccountVo userAccountVo = new UserAccountVo(userAccount);
         //用户态保存
-        request.getSession().setAttribute(GlobalConstants.SESSION_KEY, userAccountVo);
-        return userAccountVo;
+        return JwtUtils.generateToken(userAccountVo);
     }
 
     @Override

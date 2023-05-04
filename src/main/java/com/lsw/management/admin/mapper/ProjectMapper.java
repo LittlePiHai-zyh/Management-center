@@ -3,7 +3,9 @@ package com.lsw.management.admin.mapper;
 import com.lsw.management.admin.model.dto.project.ProjectNoAnswerQueryDto;
 import com.lsw.management.admin.model.dto.project.ProjectQueryDto;
 import com.lsw.management.admin.model.po.project.Project;
+import com.lsw.management.admin.model.po.project.ProjectInfo;
 import com.lsw.management.admin.model.vo.project.ProjectNoAnswerVo;
+import com.lsw.management.admin.model.vo.project.ProjectStatusVo;
 import com.lsw.management.admin.model.vo.project.ProjectVo;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.BaseMapper;
@@ -21,6 +23,10 @@ public interface ProjectMapper extends BaseMapper<Project> {
     List<ProjectVo> listAll(@Param("queryDto") ProjectQueryDto queryDto);
 
     List<ProjectNoAnswerVo> noAnswerListAll(@Param("queryDto") ProjectNoAnswerQueryDto queryDto);
+
+    List<ProjectStatusVo> projectState();
+
+    ProjectInfo getCurrentUserProject(@Param("id") Integer id);
 }
 
 

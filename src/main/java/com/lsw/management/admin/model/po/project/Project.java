@@ -59,7 +59,7 @@ public class Project implements Serializable {
     /**
      * 毕业设计状态：0进行中、1已完成、2已取消等 
      */
-    @Field(field = "status",comment = "毕业设计状态：0进行中、1已完成，2 已取消、3免答申请等")
+    @Field(field = "status",comment = "毕业设计状态：0进行中、1已完成，2 已取消、3免答申请,4评分结束等")
     @Column(name = "status")
     private Integer status;
 

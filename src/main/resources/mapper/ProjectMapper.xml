@@ -5,23 +5,27 @@
 <mapper namespace="com.lsw.management.admin.mapper.ProjectMapper">
 
     <resultMap id="BaseResultMap" type="com.lsw.management.admin.model.po.project.Project">
-            <id property="id" column="id" jdbcType="INTEGER"/>
-            <result property="topicId" column="topic_id" jdbcType="INTEGER"/>
-            <result property="status" column="status" jdbcType="INTEGER"/>
-            <result property="startDate" column="start_date" jdbcType="TIMESTAMP"/>
-            <result property="endDate" column="end_date" jdbcType="TIMESTAMP"/>
-            <result property="studentId" column="student_id" jdbcType="INTEGER"/>
-            <result property="deleted" column="deleted" jdbcType="TINYINT"/>
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="topicId" column="topic_id" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="startDate" column="start_date" jdbcType="TIMESTAMP"/>
+        <result property="endDate" column="end_date" jdbcType="TIMESTAMP"/>
+        <result property="studentId" column="student_id" jdbcType="INTEGER"/>
+        <result property="deleted" column="deleted" jdbcType="TINYINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,topic_id,status,
+        id
+        ,topic_id,status,
         start_date,end_date,student_id,
         teacher_id,deleted
     </sql>
 
     <sql id="List_All_Column_List">
-        p.id,
+        p
+        .
+        id
+        ,
 	p.STATUS,
 	p.start_date,
 	p.end_date,
@@ -31,7 +35,10 @@
     </sql>
 
     <sql id="NO_Answer_List">
-        p.id,
+        p
+        .
+        id
+        ,
 	p.STATUS,
 	p.start_date,
 	p.end_date,
@@ -46,7 +53,7 @@
 
     <select id="listAll" resultMap="listAll_type">
         SELECT
-            <include refid="List_All_Column_List"/>
+        <include refid="List_All_Column_List"/>
         FROM
         project p
         LEFT JOIN user_info uf1 ON uf1.account_id = p.student_id
@@ -54,15 +61,15 @@
         LEFT JOIN user_info uf2 ON uf2.account_id = ts.teacher_id
         <where>
             p.deleted=0
-                <if test="queryDto.teacherName != null and queryDto.teacherName != ''">
-                    AND uf2.name LIKE concat('%',#{queryDto.teacherName}, '%')
-                </if>
-                <if test="queryDto.status != null and queryDto.status != ''">
-                    AND p.status = #{queryDto.status}
-                </if>
-                <if test="queryDto.studentName != null and queryDto.studentName != ''">
-                    AND uf1.name LIKE concat('%',#{queryDto.studentName}, '%')
-                </if>
+            <if test="queryDto.teacherName != null and queryDto.teacherName != ''">
+                AND uf2.name LIKE concat('%',#{queryDto.teacherName}, '%')
+            </if>
+            <if test="queryDto.status != null and queryDto.status != ''">
+                AND p.status = #{queryDto.status}
+            </if>
+            <if test="queryDto.studentName != null and queryDto.studentName != ''">
+                AND uf1.name LIKE concat('%',#{queryDto.studentName}, '%')
+            </if>
         </where>
     </select>
 
@@ -97,6 +104,59 @@
             </if>
         </where>
     </select>
+    <select id="projectState" resultType="com.lsw.management.admin.model.vo.project.ProjectStatusVo">
+        SELECT COUNT(*) AS count,
+    CASE
+        WHEN status = 0 THEN '进行中'
+        WHEN status = 1 THEN '已完成'
+        WHEN status = 2 THEN '已取消'
+        WHEN status = 3 THEN '免答申请'
+        WHEN status = 4 THEN '评分结束'
+        ELSE '未知状态'
+        END
+        AS state
+FROM
+    project
+WHERE
+    deleted = 0
+GROUP BY
+    status;
+    </select>
+
+    <sql id="current_project">
+        p
+        .
+        start_date
+        ,
+	 p.end_date,
+	 ts.title,
+	 uf.name as teacherName,
+	 ts.major,
+	 ts.direction,
+	 ts.student_type,
+            p.status,
+            p.id
+    </sql>
+    <select id="getCurrentUserProject" resultMap="current_Project">
+        SELECT
+        <include refid="current_project"/>
+        FROM project p
+        LEFT JOIN topic_selection ts ON ts.id=p.topic_id
+        LEFT JOIN user_info uf ON uf.account_id=ts.teacher_id
+        where p.deleted=0 and ts.deleted=0 and p.student_id=#{id}
+    </select>
+
+    <resultMap id="current_Project" type="com.lsw.management.admin.model.po.project.ProjectInfo">
+        <result property="title" column="title" jdbcType="INTEGER"/>
+        <result property="startDate" column="start_date" jdbcType="TIMESTAMP"/>
+        <result property="endDate" column="end_date" jdbcType="TIMESTAMP"/>
+        <result property="teacherName" column="teacher_name" jdbcType="VARCHAR"/>
+        <result property="major" column="major" jdbcType="INTEGER"/>
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="direction" column="direction" jdbcType="VARCHAR"/>
+        <result property="studentType" column="student_type" jdbcType="INTEGER"/>
+    </resultMap>
 
     <resultMap id="noAnswerListAll_column" type="com.lsw.management.admin.model.vo.project.ProjectNoAnswerVo">
         <id property="id" column="id" jdbcType="INTEGER"/>
@@ -111,7 +171,6 @@
         <result property="studentType" column="student_type" jdbcType="VARCHAR"/>
         <result property="topicId" column="topic_id" jdbcType="VARCHAR"/>
     </resultMap>
-
 
 
     <resultMap id="listAll_type" type="com.lsw.management.admin.model.vo.project.ProjectVo">

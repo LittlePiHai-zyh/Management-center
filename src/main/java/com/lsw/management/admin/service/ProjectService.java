@@ -1,7 +1,9 @@
 package com.lsw.management.admin.service;
 
 import com.lsw.management.admin.model.dto.project.*;
+import com.lsw.management.admin.model.vo.project.ProjectInfoVo;
 import com.lsw.management.admin.model.vo.project.ProjectNoAnswerVo;
+import com.lsw.management.admin.model.vo.project.ProjectStatusVo;
 import com.lsw.management.admin.model.vo.project.ProjectVo;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,4 +28,8 @@ public interface ProjectService {
     List<ProjectNoAnswerVo> noAnswerListAll(ProjectNoAnswerQueryDto queryDto);
 
     Integer noAnswerAdd(ProjectNoAnswerAddDto addDto);
+
+    List<ProjectStatusVo> projectState();
+
+    ProjectInfoVo getCurrentUserProject(HttpServletRequest request);
 }

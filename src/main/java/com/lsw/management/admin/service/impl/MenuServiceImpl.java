@@ -61,7 +61,7 @@ public class MenuServiceImpl implements MenuService {
         Arrays.stream(idArray).map(Integer::parseInt).forEach(id -> {
             Menu menu = Menu.builder()
                     .menuId(id)
-                    .deleted((byte) 0)
+                    .deleted((byte) 1)
                     .updateTime(new Date())
                     .build();
             int i = menuMapper.updateByPrimaryKeySelective(menu);

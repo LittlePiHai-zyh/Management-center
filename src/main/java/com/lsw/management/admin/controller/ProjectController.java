@@ -1,7 +1,9 @@
 package com.lsw.management.admin.controller;
 
 import com.lsw.management.admin.model.dto.project.*;
+import com.lsw.management.admin.model.vo.project.ProjectInfoVo;
 import com.lsw.management.admin.model.vo.project.ProjectNoAnswerVo;
+import com.lsw.management.admin.model.vo.project.ProjectStatusVo;
 import com.lsw.management.admin.model.vo.project.ProjectVo;
 import com.lsw.management.admin.service.ProjectService;
 import com.lsw.management.common.http.response.ApiResponse;
@@ -67,5 +69,17 @@ public class ProjectController {
     @PostMapping("/noAnswerAdd")
     private ApiResponse<Integer> noAnswerAdd(@RequestBody ProjectNoAnswerAddDto addDto){
         return ResponseHelper.success(projectService.noAnswerAdd(addDto));
+    }
+
+    @ApiOperation(value = "学生完成状态", httpMethod = "GET")
+    @GetMapping("/projectState")
+    private ApiResponse<List<ProjectStatusVo>> projectState(){
+        return ResponseHelper.success(projectService.projectState());
+    }
+
+    @ApiOperation(value = "获取当前登录用户的毕设", httpMethod = "GET")
+    @GetMapping("/getCurrentUserProject")
+    private ApiResponse<ProjectInfoVo> getCurrentUserProject(HttpServletRequest request){
+        return  ResponseHelper.success(projectService.getCurrentUserProject(request));
     }
 }

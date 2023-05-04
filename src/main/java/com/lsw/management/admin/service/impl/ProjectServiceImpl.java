@@ -6,14 +6,21 @@ import com.lsw.management.admin.mapper.TopicSelectionMapper;
 import com.lsw.management.admin.model.dto.project.*;
 import com.lsw.management.admin.model.po.designProjectAuditFlow.DesignProjectAuditFlow;
 import com.lsw.management.admin.model.po.project.Project;
+import com.lsw.management.admin.model.po.project.ProjectInfo;
 import com.lsw.management.admin.model.po.topic.selection.TopicSelection;
 import com.lsw.management.admin.model.po.user.UserAccount;
+import com.lsw.management.admin.model.vo.project.ProjectInfoVo;
 import com.lsw.management.admin.model.vo.project.ProjectNoAnswerVo;
+import com.lsw.management.admin.model.vo.project.ProjectStatusVo;
 import com.lsw.management.admin.model.vo.project.ProjectVo;
 import com.lsw.management.admin.service.ProjectService;
 import com.lsw.management.admin.service.UserAccountService;
 import com.lsw.management.common.constants.ErrorCode;
+import com.lsw.management.common.constants.MajorEnum;
+import com.lsw.management.common.constants.StudentTypeEnum;
 import com.lsw.management.common.exception.BusinessException;
+import com.lsw.management.common.util.EnumUtils;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -47,6 +54,26 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Resource
     TransactionTemplate transactionTemplate;
+
+    @SneakyThrows
+    public static ProjectInfoVo toProjectInfoVo(ProjectInfo projectInfo) {
+        if (projectInfo == null) {
+            return null;
+        }
+        ProjectInfoVo projectInfoVo = new ProjectInfoVo();
+        projectInfoVo.setId(projectInfo.getId());
+        projectInfoVo.setStartDate(projectInfo.getStartDate());
+        projectInfoVo.setEndDate(projectInfo.getEndDate());
+        projectInfoVo.setTitle(projectInfo.getTitle());
+        projectInfoVo.setTeacherName(projectInfo.getTeacherName());
+        projectInfoVo.setDirection(projectInfo.getDirection());
+        Object type = EnumUtils.getNameByCode(StudentTypeEnum.class, "code", "name", projectInfo.getStudentType());
+        Object major = EnumUtils.getNameByCode(MajorEnum.class, "code", "name", projectInfo.getMajor());
+        projectInfoVo.setMajor((String) major);
+        projectInfoVo.setStudentType((String) type);
+        projectInfoVo.setStatus(projectInfo.getStatus());
+        return projectInfoVo;
+    }
 
     @Override
     public Integer studentTopicSelection(ProjectAddDto addDto, HttpServletRequest request) {
@@ -100,6 +127,9 @@ public class ProjectServiceImpl implements ProjectService {
     public Integer studentTopicSelectionUpdate(ProjectUpdateDto updateDto) {
         Project project = new Project();
         BeanUtils.copyProperties(updateDto, project);
+        if(updateDto.getStatus()==2){
+            updateDto.setStatus(3);
+        }
         project.setUpdateTime(new Date());
         return projectMapper.updateByPrimaryKeySelective(project);
     }
@@ -148,5 +178,17 @@ public class ProjectServiceImpl implements ProjectService {
             designProjectAuditFlowMapper.updateByExampleSelective(designProjectAuditFlow, example);
             return i;
         });
+    }
+
+    @Override
+    public List<ProjectStatusVo> projectState() {
+        return projectMapper.projectState();
+    }
+
+    @Override
+    public ProjectInfoVo getCurrentUserProject(HttpServletRequest request) {
+        UserAccount currentUser = userAccountService.getCurrentUser(request);
+        ProjectInfo currentUserProject = projectMapper.getCurrentUserProject(currentUser.getId());
+         return   toProjectInfoVo(currentUserProject);
     }
 }

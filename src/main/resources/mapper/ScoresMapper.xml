@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lsw.management.admin.mapper.ScoresMapper">
+
+    <resultMap id="BaseResultMap" type="com.lsw.management.admin.model.po.scores.Scores">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="projectId" column="project_id" jdbcType="INTEGER"/>
+            <result property="opinion" column="opinion" jdbcType="VARCHAR"/>
+            <result property="result" column="result" jdbcType="INTEGER"/>
+            <result property="score" column="score" jdbcType="DOUBLE"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,project_id,opinion,
+        result,score
+    </sql>
+
+    <select id="listAll" resultMap="list">
+
+    </select>
+
+    <resultMap id="list" type="com.lsw.management.admin.model.po.scores.ScoreVo">
+        <id property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="studentName" column="student_name" jdbcType="VARCHAR"/>
+        <result property="opinion" column="opinion" jdbcType="VARCHAR"/>
+        <result property="teacherName" column="teacher_name" jdbcType="VARCHAR"/>
+        <result property="result" column="result" jdbcType="INTEGER"/>
+        <result property="major" column="major" jdbcType="INTEGER"/>
+        <result property="score" column="score" jdbcType="DOUBLE"/>
+    </resultMap>
+
+
+</mapper>

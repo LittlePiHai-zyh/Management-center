@@ -2,7 +2,6 @@ package com.lsw.management.admin.controller;
 
 
 import com.lsw.management.admin.annotation.AuthCheck;
-import com.lsw.management.admin.annotation.Log;
 import com.lsw.management.admin.annotation.PermissionEnum;
 import com.lsw.management.admin.model.dto.user.PermissionVo;
 import com.lsw.management.admin.model.dto.user.UserLoginDto;
@@ -11,7 +10,6 @@ import com.lsw.management.admin.model.dto.user.UserRegistryDto;
 import com.lsw.management.admin.model.po.user.UserAccount;
 import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.VerifyImgResult;
-import com.lsw.management.admin.model.vo.user.UserAccountVo;
 import com.lsw.management.admin.model.vo.user.UserVo;
 import com.lsw.management.admin.service.UserAccountService;
 import com.lsw.management.admin.service.impl.ImgVerifyCodeServiceImpl;
@@ -27,7 +25,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangyh
@@ -46,7 +46,7 @@ public class UserController {
     ImgVerifyCodeServiceImpl imgVerifyCodeService;
 
 
-    @Log
+
     @ApiOperation(value = "用户信息分页查询", httpMethod = "POST")
     @PostMapping("/pageList")
     @AuthCheck(value = PermissionEnum.USER)
@@ -55,18 +55,20 @@ public class UserController {
         return ResponseHelper.success(userVoPageInfoVo);
     }
 
-    @Log
+
     @ApiOperation(value = "基础用户登录", httpMethod = "POST")
     @PostMapping(value = "/baseLogin")
-    public ApiResponse<UserAccountVo> baseLogin(@Validated @RequestBody UserLoginDto user, HttpServletRequest request) {
+    public ApiResponse<Map<String,String>> baseLogin(@Validated @RequestBody UserLoginDto user, HttpServletRequest request) {
         String verifyCode = user.getVerifyCode();
         String randomKey = user.getRandomKey();
         imgVerifyCodeService.checkCaptcha(randomKey,verifyCode);
-        UserAccountVo userAccountVo = userService.baseLogin(user, request);
-        return ResponseHelper.success(userAccountVo);
+        String token = userService.baseLogin(user, request);
+        HashMap<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("token",token);
+        return ResponseHelper.success(tokenMap);
     }
 
-    @Log
+
     @ApiOperation(value = "获取验证码", httpMethod = "GET")
     @GetMapping("/imgVerifyCode")
     public ApiResponse<VerifyImgResult> getVerifyCode(@RequestParam(value = "length",required = false) Integer length) {
@@ -76,7 +78,7 @@ public class UserController {
         return ResponseHelper.success(imgVerifyCodeService.generateVerifyCoe(length));
     }
 
-    @Log
+
     @ApiOperation(value = "用户注册", httpMethod = "POST")
     @PostMapping("/userRegistry")
     public ApiResponse<Boolean> userRegistry(@RequestBody @Validated UserRegistryDto registryDto) {
@@ -84,7 +86,7 @@ public class UserController {
         return ResponseHelper.success(flag>0);
     }
 
-    @Log
+
     @AuthCheck(value = PermissionEnum.ADMIN)
     @ApiOperation(value = "账号删除", httpMethod = "DELETE")
     @DeleteMapping("/delete")
@@ -96,7 +98,7 @@ public class UserController {
         return ResponseHelper.success(userAccountDeleteFlag);
     }
 
-    @Log
+
     @AuthCheck(value = PermissionEnum.USER)
     @ApiOperation(value = "查询用户账号", httpMethod = "GET")
     @GetMapping("/getUserAccount")

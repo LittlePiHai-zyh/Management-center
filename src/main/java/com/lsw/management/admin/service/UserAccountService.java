@@ -5,9 +5,8 @@ import com.lsw.management.admin.model.dto.user.UserLoginDto;
 import com.lsw.management.admin.model.dto.user.UserQueryDto;
 import com.lsw.management.admin.model.dto.user.UserRegistryDto;
 import com.lsw.management.admin.model.po.user.UserAccount;
-import com.lsw.management.admin.model.vo.user.UserAccountVo;
-import com.lsw.management.admin.model.vo.user.UserVo;
 import com.lsw.management.admin.model.vo.PageInfoVo;
+import com.lsw.management.admin.model.vo.user.UserVo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -32,7 +31,7 @@ public interface UserAccountService {
     * @param request
     * @return
     */
-   UserAccountVo baseLogin(UserLoginDto user, HttpServletRequest request);
+   String baseLogin(UserLoginDto user, HttpServletRequest request);
 
    /**
     * 注册
