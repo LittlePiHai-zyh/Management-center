@@ -34,6 +34,8 @@ public interface DesignProjectAuditFlowMapper extends Mapper<DesignProjectAuditF
     List<DesignProjectAuditFlowVo> listAll(@Param("queryDto") DesignProjectAuditFlowQueryDto queryDto);
 
     List<DesignProjectAuditFlowPercent> designProjectAuditFlowPercent();
+
+    DesignProjectAuditFlow selectCanDeleteInfo(@Param("id") Integer id);
 }
 
 

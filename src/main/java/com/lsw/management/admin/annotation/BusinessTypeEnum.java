@@ -1,7 +1,7 @@
 package com.lsw.management.admin.annotation;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/7 16:40
  * @desc 业务类型
  */

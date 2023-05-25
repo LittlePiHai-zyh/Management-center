@@ -2,6 +2,7 @@ package com.lsw.management.admin.controller;
 
 import com.lsw.management.admin.model.dto.menu.MenuAddDto;
 import com.lsw.management.admin.model.dto.menu.MenuQueryDto;
+import com.lsw.management.admin.model.dto.menu.MenuUpdateDto;
 import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.menu.MenuVo;
 import com.lsw.management.admin.service.MenuService;
@@ -51,6 +52,12 @@ public class MenuController {
     @PostMapping("/pageList")
     public ApiResponse<PageInfoVo<MenuVo>> pageList(@RequestBody MenuQueryDto queryDto) {
         return ResponseHelper.success(menuService.pageList(queryDto));
+    }
+
+    @ApiOperation(value = "菜单更新", httpMethod = "POST")
+    @PostMapping("/update")
+    public ApiResponse<Integer> update(@RequestBody MenuUpdateDto updateDto) {
+        return ResponseHelper.success(menuService.update(updateDto));
     }
 
 }

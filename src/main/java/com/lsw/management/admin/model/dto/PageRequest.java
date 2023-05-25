@@ -3,7 +3,7 @@ package com.lsw.management.admin.model.dto;
 import lombok.Data;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/7 13:58
  * @desc 分页请求
  */

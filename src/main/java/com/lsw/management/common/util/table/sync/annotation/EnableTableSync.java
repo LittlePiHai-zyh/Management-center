@@ -7,7 +7,7 @@ import org.springframework.core.annotation.AliasFor;
 import java.lang.annotation.*;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/10 9:29
  * @desc 开启表结构同步
  */

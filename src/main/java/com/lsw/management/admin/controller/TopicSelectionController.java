@@ -58,7 +58,7 @@ public class TopicSelectionController {
 
     @ApiOperation(value = "毕设题目更新", httpMethod = "POST")
     @PostMapping("/update")
-    public ApiResponse<Integer> update(@RequestParam TopicSelectionUpdateDto updateDto) {
+    public ApiResponse<Integer> update(@RequestBody TopicSelectionUpdateDto updateDto) {
         return ResponseHelper.success(topicSelectionService.update(updateDto));
     }
 

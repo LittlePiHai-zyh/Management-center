@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 import java.sql.JDBCType;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/10 10:54
  * @desc 字段信息
  */

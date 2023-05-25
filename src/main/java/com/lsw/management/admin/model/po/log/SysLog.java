@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lsw.management.common.util.table.sync.annotation.Field;
 import com.lsw.management.common.util.table.sync.annotation.TableSync;
 import com.lsw.management.common.util.table.sync.sql.table.mysql.index.PRI;
-import com.lsw.management.common.util.excel.annotion.ExcelSelect;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -51,7 +50,6 @@ public class SysLog  implements Serializable {
     /**
      * 操作模块
      */
-    @ExcelSelect
     @Field(field = "level",comment = "日志级别")
     @Column(name = "level")
     private Integer level;

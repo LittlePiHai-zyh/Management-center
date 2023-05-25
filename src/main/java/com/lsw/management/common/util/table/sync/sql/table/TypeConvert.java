@@ -15,7 +15,7 @@ import static java.sql.JDBCType.*;
 import static java.sql.JDBCType.TIMESTAMP;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/10 13:21
  * @desc 默认数据类型对应
  */

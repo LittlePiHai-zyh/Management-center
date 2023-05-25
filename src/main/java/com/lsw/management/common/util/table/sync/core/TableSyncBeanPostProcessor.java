@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/10 10:37
  * @desc 将被@TableSync注解的类注入Spring后进行处理
  */

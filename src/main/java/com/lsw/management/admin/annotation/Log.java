@@ -3,7 +3,7 @@ package com.lsw.management.admin.annotation;
 import java.lang.annotation.*;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/7 16:15
  * @desc 日志记录
  */

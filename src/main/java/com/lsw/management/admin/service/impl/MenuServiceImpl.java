@@ -3,6 +3,7 @@ package com.lsw.management.admin.service.impl;
 import com.lsw.management.admin.mapper.MenuMapper;
 import com.lsw.management.admin.model.dto.menu.MenuAddDto;
 import com.lsw.management.admin.model.dto.menu.MenuQueryDto;
+import com.lsw.management.admin.model.dto.menu.MenuUpdateDto;
 import com.lsw.management.admin.model.po.menu.Menu;
 import com.lsw.management.admin.model.po.user.UserAccount;
 import com.lsw.management.admin.model.vo.PageInfoVo;
@@ -120,5 +121,12 @@ public class MenuServiceImpl implements MenuService {
         PageInfoVo<MenuVo> pageInfoVo = new PageInfoVo<>();
         pageInfoVo.setData(menuVos);
         return pageInfoVo;
+    }
+
+    @Override
+    public Integer update(MenuUpdateDto updateDto) {
+        Menu menu = new Menu();
+        BeanUtils.copyProperties(updateDto,menu);
+       return menuMapper.updateByPrimaryKeySelective(menu);
     }
 }

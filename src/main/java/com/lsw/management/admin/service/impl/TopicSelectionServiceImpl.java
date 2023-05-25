@@ -82,20 +82,25 @@ public class TopicSelectionServiceImpl implements TopicSelectionService {
         AtomicInteger atomicInteger = new AtomicInteger();
         Arrays.stream(idArr).map(Integer::parseInt).forEach(id -> {
           transactionTemplate.execute(status -> {
-              TopicSelection topicSelection = TopicSelection.builder()
-                      .id(id)
-                      .deleted((byte) 1)
-                      .updateTime(new Date())
-                      .build();
-              int i = topicSelectionMapper.updateByPrimaryKeySelective(topicSelection);
-              atomicInteger.getAndAdd(i);
-              DesignProjectAuditFlow designProjectAuditFlow = new DesignProjectAuditFlow();
-              designProjectAuditFlow.setDeleted((byte)1);
-              Example example = new Example(DesignProjectAuditFlow.class);
-              example.createCriteria()
-                      .andEqualTo(DesignProjectAuditFlow.DELETED,0)
-                      .andEqualTo(DesignProjectAuditFlow.TOPIC_ID,id);
-             return designProjectAuditFlowMapper.updateByExampleSelective(designProjectAuditFlow,example);
+              //题目未审核或审核失败才能删除
+              DesignProjectAuditFlow  DesignProjectAuditFlowInfo= designProjectAuditFlowMapper.selectCanDeleteInfo(id);
+              if(DesignProjectAuditFlowInfo!=null){
+                  TopicSelection topicSelection = TopicSelection.builder()
+                          .id(id)
+                          .deleted((byte) 1)
+                          .updateTime(new Date())
+                          .build();
+                  int i = topicSelectionMapper.updateByPrimaryKeySelective(topicSelection);
+                  atomicInteger.getAndAdd(i);
+                  DesignProjectAuditFlow designProjectAuditFlow = new DesignProjectAuditFlow();
+                  designProjectAuditFlow.setDeleted((byte)1);
+                  Example example = new Example(DesignProjectAuditFlow.class);
+                  example.createCriteria()
+                          .andEqualTo(DesignProjectAuditFlow.DELETED,0)
+                          .andEqualTo(DesignProjectAuditFlow.TOPIC_ID,id);
+                  return designProjectAuditFlowMapper.updateByExampleSelective(designProjectAuditFlow,example);
+              }
+             return null;
           });
         });
         return atomicInteger.get();

@@ -1,7 +1,7 @@
 package com.lsw.management.common.constants;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/6 16:35
  * @desc
  */

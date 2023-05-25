@@ -4,7 +4,7 @@ package com.lsw.management.common.exception;
 import com.lsw.management.common.constants.ErrorCode;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/3 17:56
  * @desc
  */

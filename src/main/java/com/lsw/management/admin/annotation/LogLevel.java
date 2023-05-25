@@ -3,7 +3,7 @@ package com.lsw.management.admin.annotation;
 import lombok.Getter;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/7 17:14
  * @desc 日志级别
  */

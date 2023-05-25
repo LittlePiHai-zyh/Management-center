@@ -5,7 +5,7 @@ import org.springframework.core.annotation.AliasFor;
 import java.lang.annotation.*;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/10 10:54
  * @desc 表信息
  */

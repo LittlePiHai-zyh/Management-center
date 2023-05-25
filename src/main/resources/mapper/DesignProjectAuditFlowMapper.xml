@@ -162,6 +162,15 @@ GROUP BY
         END;
     </select>
 
+    <select id="selectCanDeleteInfo"
+            resultType="com.lsw.management.admin.model.po.designProjectAuditFlow.DesignProjectAuditFlow">
+        SELECT * FROM design_project_audit_flow
+                 WHERE state = 0
+                    OR department_audit_result = 0
+                    OR school_audit_result = 0;
+        AND id=#{id}
+    </select>
+
     <resultMap id="pageList_Resul_Type"
                type="com.lsw.management.admin.model.vo.designProjectAuditFlow.DesignProjectAuditFlowVo">
         <id property="id" column="id" jdbcType="INTEGER"/>

@@ -5,7 +5,7 @@ import com.lsw.management.common.util.table.sync.sql.table.Index;
 import java.text.MessageFormat;
 
 /**
- * @author zhangyh
+ * @author lsw
  * @Date 2023/4/10 11:28
  * @desc 主键索引
  */

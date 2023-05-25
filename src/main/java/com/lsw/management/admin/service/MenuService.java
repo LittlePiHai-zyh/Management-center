@@ -2,6 +2,7 @@ package com.lsw.management.admin.service;
 
 import com.lsw.management.admin.model.dto.menu.MenuAddDto;
 import com.lsw.management.admin.model.dto.menu.MenuQueryDto;
+import com.lsw.management.admin.model.dto.menu.MenuUpdateDto;
 import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.menu.MenuVo;
 
@@ -21,4 +22,6 @@ public interface MenuService {
     List<MenuVo> listAll(MenuQueryDto queryDto,HttpServletRequest request);
 
     PageInfoVo<MenuVo> pageList(MenuQueryDto queryDto);
+
+    Integer update(MenuUpdateDto updateDto);
 }
