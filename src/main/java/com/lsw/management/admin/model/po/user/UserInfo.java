@@ -73,6 +73,14 @@ public class UserInfo implements Serializable {
     @Field(field = "birthday",comment = "出生日期")
     private Date birthday;
 
+    @Column(name = "type")
+    @Field(field = "type",comment = "用户类型")
+    private Integer type;
+
+    @Column(name = "professional")
+    @Field(field = "professional",comment = "职称")
+    private Integer professional;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_time")

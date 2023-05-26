@@ -9,6 +9,7 @@ import com.lsw.management.admin.model.dto.user.PermissionVo;
 import com.lsw.management.admin.model.dto.user.UserLoginDto;
 import com.lsw.management.admin.model.dto.user.UserQueryDto;
 import com.lsw.management.admin.model.dto.user.UserRegistryDto;
+import com.lsw.management.admin.model.po.user.TypeVo;
 import com.lsw.management.admin.model.po.user.UserAccount;
 import com.lsw.management.admin.model.po.user.UserInfo;
 import com.lsw.management.admin.model.vo.PageInfoVo;
@@ -16,6 +17,7 @@ import com.lsw.management.admin.model.vo.user.UserAccountVo;
 import com.lsw.management.admin.model.vo.user.UserVo;
 import com.lsw.management.admin.service.UserAccountService;
 import com.lsw.management.common.constants.ErrorCode;
+import com.lsw.management.common.constants.TypeEnum;
 import com.lsw.management.common.exception.BusinessException;
 import com.lsw.management.common.util.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -187,6 +189,23 @@ public class UserAccountServiceImpl implements UserAccountService {
             permissionVo.setName(permissionEnum.getName());
             permissionVo.setValue(permissionEnum.getCode());
             res.add(permissionVo);
+        }
+        return res;
+    }
+
+    @Override
+    public List<UserVo> listAll(UserQueryDto queryDto) {
+        return userInfoMapper.listAll(queryDto);
+    }
+
+    @Override
+    public List<TypeVo> getUserType() {
+        List<TypeVo> res=new ArrayList<>();
+        for (TypeEnum value : TypeEnum.values()) {
+            TypeVo typeVo = new TypeVo();
+            typeVo.setCode(value.getCode());
+            typeVo.setName(value.getName());
+            res.add(typeVo);
         }
         return res;
     }

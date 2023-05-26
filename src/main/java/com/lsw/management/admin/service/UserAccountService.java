@@ -4,6 +4,7 @@ import com.lsw.management.admin.model.dto.user.PermissionVo;
 import com.lsw.management.admin.model.dto.user.UserLoginDto;
 import com.lsw.management.admin.model.dto.user.UserQueryDto;
 import com.lsw.management.admin.model.dto.user.UserRegistryDto;
+import com.lsw.management.admin.model.po.user.TypeVo;
 import com.lsw.management.admin.model.po.user.UserAccount;
 import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.user.UserVo;
@@ -51,4 +52,8 @@ public interface UserAccountService {
    UserVo getById(Integer id);
 
     List<PermissionVo> getPermissions();
+
+   List<UserVo> listAll(UserQueryDto queryDto);
+
+    List<TypeVo> getUserType();
 }

@@ -36,4 +36,20 @@
                  LEFT JOIN user_info u ON a.id = u.account_id
         WHERE a.id=#{id}
     </select>
+    <select id="listAll" resultType="com.lsw.management.admin.model.vo.user.UserVo">
+        SELECT
+            a.id,
+            a.username,
+            a.state,
+            a.roles ,
+            u.name,
+            u.gender,
+            u.mobile,
+            u.email,
+            u.type,
+            u.professional
+        FROM
+            user_account a
+                LEFT JOIN user_info u on u.account_id=a.id
+    </select>
 </mapper>

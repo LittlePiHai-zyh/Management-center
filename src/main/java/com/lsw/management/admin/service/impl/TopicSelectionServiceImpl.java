@@ -18,7 +18,7 @@ import com.lsw.management.admin.service.TopicSelectionService;
 import com.lsw.management.admin.service.UserAccountService;
 import com.lsw.management.common.constants.ErrorCode;
 import com.lsw.management.common.constants.MajorEnum;
-import com.lsw.management.common.constants.StudentTypeEnum;
+import com.lsw.management.common.constants.TypeEnum;
 import com.lsw.management.common.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -108,10 +108,24 @@ public class TopicSelectionServiceImpl implements TopicSelectionService {
 
     @Override
     public Integer update(TopicSelectionUpdateDto updateDto) {
-        TopicSelection topicSelection = new TopicSelection();
-        BeanUtils.copyProperties(updateDto, topicSelection);
-        topicSelection.setUpdateTime(new Date());
-        return topicSelectionMapper.updateByPrimaryKeySelective(topicSelection);
+      return  transactionTemplate.execute(status -> {
+          //更新题目
+            TopicSelection topicSelection = new TopicSelection();
+            BeanUtils.copyProperties(updateDto, topicSelection);
+            topicSelection.setUpdateTime(new Date());
+            topicSelectionMapper.updateByPrimaryKeySelective(topicSelection);
+            DesignProjectAuditFlow designProjectAuditFlow = new DesignProjectAuditFlow();
+            //修改审核状态，再次审核
+            designProjectAuditFlow.setState(0);
+          designProjectAuditFlow.setDeleted((byte)0);
+            designProjectAuditFlow.setTopicId(updateDto.getId());
+            Example example = new Example(DesignProjectAuditFlow.class);
+            example.createCriteria()
+                    .andEqualTo(DesignProjectAuditFlow.DELETED,0)
+                    .andEqualTo(DesignProjectAuditFlow.TOPIC_ID,updateDto.getId());
+            designProjectAuditFlowMapper.deleteByExample(example);
+         return   designProjectAuditFlowMapper.insert(designProjectAuditFlow);
+        });
     }
 
     @Override
@@ -165,7 +179,7 @@ public class TopicSelectionServiceImpl implements TopicSelectionService {
     @Override
     public List<StudentTypeVo> getStudentType() {
         List<StudentTypeVo> res = new ArrayList<>();
-        Arrays.stream(StudentTypeEnum.values())
+        Arrays.stream(TypeEnum.values())
                 .forEach(studentTypeEnum -> {
                     StudentTypeVo studentTypeVo = new StudentTypeVo();
                     studentTypeVo.setCode(studentTypeEnum.getCode());

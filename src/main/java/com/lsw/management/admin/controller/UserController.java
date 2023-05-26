@@ -7,6 +7,7 @@ import com.lsw.management.admin.model.dto.user.PermissionVo;
 import com.lsw.management.admin.model.dto.user.UserLoginDto;
 import com.lsw.management.admin.model.dto.user.UserQueryDto;
 import com.lsw.management.admin.model.dto.user.UserRegistryDto;
+import com.lsw.management.admin.model.po.user.TypeVo;
 import com.lsw.management.admin.model.po.user.UserAccount;
 import com.lsw.management.admin.model.vo.PageInfoVo;
 import com.lsw.management.admin.model.vo.VerifyImgResult;
@@ -45,7 +46,12 @@ public class UserController {
     @Resource
     ImgVerifyCodeServiceImpl imgVerifyCodeService;
 
-
+    @ApiOperation(value = "查询全部账户信息查询", httpMethod = "POST")
+    @PostMapping("/listAll")
+    public ApiResponse<List<UserVo>> listAll(@RequestBody UserQueryDto queryDto) {
+        List<UserVo> userVoPageInfoVo = userService.listAll(queryDto);
+        return ResponseHelper.success(userVoPageInfoVo);
+    }
 
     @ApiOperation(value = "用户信息分页查询", httpMethod = "POST")
     @PostMapping("/pageList")
@@ -114,6 +120,12 @@ public class UserController {
     @GetMapping("/getPermissions")
     public ApiResponse<List<PermissionVo>> getPermissions(){
         return ResponseHelper.success(userService.getPermissions());
+    }
+
+    @ApiOperation(value = "获取用户类型", httpMethod = "GET")
+    @GetMapping("/type")
+    public ApiResponse<List<TypeVo>> getUserType(){
+        return ResponseHelper.success(userService.getUserType());
     }
 
     @ApiOperation(value = "获取登录的用户", httpMethod = "GET")

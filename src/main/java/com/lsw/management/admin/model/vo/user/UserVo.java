@@ -2,6 +2,7 @@ package com.lsw.management.admin.model.vo.user;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import java.util.Date;
 
 /**
@@ -29,4 +30,9 @@ public class UserVo {
     private String mobile;
 
     private String email;
+
+    private Integer professional;
+
+    @Column(name = "type")
+    private Integer type;
 }

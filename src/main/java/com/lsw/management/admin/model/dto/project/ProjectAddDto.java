@@ -21,6 +21,4 @@ public class ProjectAddDto {
     private Date startDate;
 
     private Date endDate;
-
-    private Integer studentId;
 }
