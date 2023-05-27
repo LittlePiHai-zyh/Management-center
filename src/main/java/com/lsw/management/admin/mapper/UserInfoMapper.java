@@ -16,5 +16,5 @@ import java.util.List;
 public interface UserInfoMapper extends Mapper<UserInfo> {
     UserVo selectUserInfo(@Param("id") Integer id);
 
-    List<UserVo> listAll(UserQueryDto queryDto);
+    List<UserVo> listAll(@Param("queryDto") UserQueryDto queryDto);
 }

@@ -17,7 +17,7 @@ import com.lsw.management.admin.service.ProjectService;
 import com.lsw.management.admin.service.UserAccountService;
 import com.lsw.management.common.constants.ErrorCode;
 import com.lsw.management.common.constants.MajorEnum;
-import com.lsw.management.common.constants.TypeEnum;
+import com.lsw.management.common.constants.StudentTypeEnum;
 import com.lsw.management.common.exception.BusinessException;
 import com.lsw.management.common.util.EnumUtils;
 import lombok.SneakyThrows;
@@ -68,7 +68,7 @@ public class ProjectServiceImpl implements ProjectService {
         projectInfoVo.setTitle(projectInfo.getTitle());
         projectInfoVo.setTeacherName(projectInfo.getTeacherName());
         projectInfoVo.setDirection(projectInfo.getDirection());
-        Object type = EnumUtils.getNameByCode(TypeEnum.class, "code", "name", projectInfo.getStudentType());
+        Object type = EnumUtils.getNameByCode(StudentTypeEnum.class, "code", "name", projectInfo.getStudentType());
         Object major = EnumUtils.getNameByCode(MajorEnum.class, "code", "name", projectInfo.getMajor());
         projectInfoVo.setMajor((String) major);
         projectInfoVo.setStudentType((String) type);

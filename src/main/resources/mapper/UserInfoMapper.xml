@@ -51,5 +51,20 @@
         FROM
             user_account a
                 LEFT JOIN user_info u on u.account_id=a.id
+        <where>
+            a.deleted=0
+            <if test="queryDto.name != null and queryDto.name!=''">
+                AND u.name LIKE concat('%',#{queryDto.name}, '%')
+            </if>
+            <if test="queryDto.username!=null and queryDto.username!=''">
+                AND a.username LIKE concat('%',#{queryDto.username}, '%')
+            </if>
+            <if test="queryDto.professional!= null and queryDto.professional!= ''">
+                AND u.professional = #{queryDto.professional}
+            </if>
+            <if test="queryDto.type!= null and queryDto.type!= ''">
+                AND u.type LIKE concat('%',#{queryDto.type}, '%')
+            </if>
+        </where>
     </select>
 </mapper>

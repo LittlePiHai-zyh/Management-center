@@ -5,10 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.lsw.management.admin.annotation.PermissionEnum;
 import com.lsw.management.admin.mapper.UserAccountMapper;
 import com.lsw.management.admin.mapper.UserInfoMapper;
-import com.lsw.management.admin.model.dto.user.PermissionVo;
-import com.lsw.management.admin.model.dto.user.UserLoginDto;
-import com.lsw.management.admin.model.dto.user.UserQueryDto;
-import com.lsw.management.admin.model.dto.user.UserRegistryDto;
+import com.lsw.management.admin.model.dto.user.*;
 import com.lsw.management.admin.model.po.user.TypeVo;
 import com.lsw.management.admin.model.po.user.UserAccount;
 import com.lsw.management.admin.model.po.user.UserInfo;
@@ -200,7 +197,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public List<TypeVo> getUserType() {
-        List<TypeVo> res=new ArrayList<>();
+        List<TypeVo> res = new ArrayList<>();
         for (TypeEnum value : TypeEnum.values()) {
             TypeVo typeVo = new TypeVo();
             typeVo.setCode(value.getCode());
@@ -208,6 +205,14 @@ public class UserAccountServiceImpl implements UserAccountService {
             res.add(typeVo);
         }
         return res;
+    }
+
+    @Override
+    public Integer update(UserUpdateDto updateDto) {
+        UserAccount userAccount = new UserAccount();
+        BeanUtils.copyProperties(updateDto, userAccount);
+        userAccount.setUpdateTime(new Date());
+        return userAccountMapper.updateByPrimaryKeySelective(userAccount);
     }
 
 

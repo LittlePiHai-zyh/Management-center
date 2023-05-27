@@ -1,9 +1,6 @@
 package com.lsw.management.admin.service;
 
-import com.lsw.management.admin.model.dto.user.PermissionVo;
-import com.lsw.management.admin.model.dto.user.UserLoginDto;
-import com.lsw.management.admin.model.dto.user.UserQueryDto;
-import com.lsw.management.admin.model.dto.user.UserRegistryDto;
+import com.lsw.management.admin.model.dto.user.*;
 import com.lsw.management.admin.model.po.user.TypeVo;
 import com.lsw.management.admin.model.po.user.UserAccount;
 import com.lsw.management.admin.model.vo.PageInfoVo;
@@ -56,4 +53,6 @@ public interface UserAccountService {
    List<UserVo> listAll(UserQueryDto queryDto);
 
     List<TypeVo> getUserType();
+
+   Integer update(UserUpdateDto queryDto);
 }

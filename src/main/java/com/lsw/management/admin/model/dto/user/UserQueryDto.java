@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author lsw
@@ -18,23 +17,11 @@ public class UserQueryDto extends PageRequest implements Serializable {
 
     private static final long serialVersionUID = 543654641L;
 
-    private Integer id;
-
     private String username;
 
     private String name;
 
-    private String permissions;
+    private String type;
 
-    private String gender;
-
-    private Integer state;
-
-    private Integer deleted;
-
-    private Date birthday;
-
-    private String mobile;
-
-    private String email;
+    private String professional;
 }

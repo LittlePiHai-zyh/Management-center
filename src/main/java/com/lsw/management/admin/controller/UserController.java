@@ -3,10 +3,7 @@ package com.lsw.management.admin.controller;
 
 import com.lsw.management.admin.annotation.AuthCheck;
 import com.lsw.management.admin.annotation.PermissionEnum;
-import com.lsw.management.admin.model.dto.user.PermissionVo;
-import com.lsw.management.admin.model.dto.user.UserLoginDto;
-import com.lsw.management.admin.model.dto.user.UserQueryDto;
-import com.lsw.management.admin.model.dto.user.UserRegistryDto;
+import com.lsw.management.admin.model.dto.user.*;
 import com.lsw.management.admin.model.po.user.TypeVo;
 import com.lsw.management.admin.model.po.user.UserAccount;
 import com.lsw.management.admin.model.vo.PageInfoVo;
@@ -51,6 +48,12 @@ public class UserController {
     public ApiResponse<List<UserVo>> listAll(@RequestBody UserQueryDto queryDto) {
         List<UserVo> userVoPageInfoVo = userService.listAll(queryDto);
         return ResponseHelper.success(userVoPageInfoVo);
+    }
+
+    @ApiOperation(value = "用户权限变更", httpMethod = "POST")
+    @PostMapping("/update")
+    public ApiResponse<Integer> update(@RequestBody UserUpdateDto queryDto) {
+        return ResponseHelper.success( userService.update(queryDto));
     }
 
     @ApiOperation(value = "用户信息分页查询", httpMethod = "POST")

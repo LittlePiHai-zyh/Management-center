@@ -18,7 +18,7 @@ import com.lsw.management.admin.service.TopicSelectionService;
 import com.lsw.management.admin.service.UserAccountService;
 import com.lsw.management.common.constants.ErrorCode;
 import com.lsw.management.common.constants.MajorEnum;
-import com.lsw.management.common.constants.TypeEnum;
+import com.lsw.management.common.constants.StudentTypeEnum;
 import com.lsw.management.common.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -179,7 +179,7 @@ public class TopicSelectionServiceImpl implements TopicSelectionService {
     @Override
     public List<StudentTypeVo> getStudentType() {
         List<StudentTypeVo> res = new ArrayList<>();
-        Arrays.stream(TypeEnum.values())
+        Arrays.stream(StudentTypeEnum.values())
                 .forEach(studentTypeEnum -> {
                     StudentTypeVo studentTypeVo = new StudentTypeVo();
                     studentTypeVo.setCode(studentTypeEnum.getCode());
